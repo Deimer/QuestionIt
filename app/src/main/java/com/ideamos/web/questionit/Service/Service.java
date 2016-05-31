@@ -12,20 +12,21 @@ import retrofit.http.POST;
 public interface Service {
 
     @FormUrlEncoded
+    @POST("/api/login")
+    void login(
+            @Field("email") String email,
+            @Field("password")String password,
+            Callback<JsonObject> cb
+    );
+
+    @FormUrlEncoded
     @POST("/api/register")
     void register(
             //User
-            @Field("first_name") String first_name,
-            @Field("last_name")String last_name,
             @Field("username")String username,
             @Field("email")String email,
-            @Field("social")int social,
-            @Field("avatar")String avatar,
             @Field("password")String password,
-            @Field("birthdate")String birthdate,
-            //Social
-            @Field("uid_provider")String uid_provider,
-            @Field("social_token")String social_token,
+            @Field("password_confirmation")String password_confirmation,
             Callback<JsonObject> cb
     );
 
