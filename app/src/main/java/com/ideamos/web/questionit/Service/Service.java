@@ -30,4 +30,14 @@ public interface Service {
             Callback<JsonObject> cb
     );
 
+    @FormUrlEncoded
+    @POST("/api/user/update/{id}")
+    void updateUser(
+            @Field("id")Integer user_id,
+            @Field("first_name")String first_name,
+            @Field("last_name")String last_name,
+            @Field("birth_date")String birth_date,
+            Callback<JsonObject> cb
+    );
+
 }

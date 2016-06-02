@@ -28,8 +28,8 @@
     </LinearLayout>
     <LinearLayout
         android:orientation="vertical"
-        android:paddingRight="40dp"
-        android:paddingLeft="40dp"
+        android:paddingRight="30dp"
+        android:paddingLeft="30dp"
         android:paddingBottom="60dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -50,8 +50,6 @@
                 android:textSize="22sp"
                 android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorPressed"
-                android:layout_centerInParent="true"
-                android:ellipsize="start"
                 android:gravity="center_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -71,8 +69,6 @@
                 android:textSize="22sp"
                 android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorPressed"
-                android:layout_centerInParent="true"
-                android:ellipsize="start"
                 android:gravity="center_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -86,15 +82,35 @@
             android:src="@drawable/arrow_next_dark"
             app:cb_color="@color/icons"
             app:cb_pressedRingWidth="10dp"/>
-        <TextView
-            android:id="@+id/lbl_or"
-            android:text="@string/login_or_login_social"
-            android:textSize="18sp"
-            android:textColor="@color/icons"
+        <LinearLayout
+            android:layout_marginRight="40dp"
+            android:layout_marginLeft="40dp"
+            android:orientation="horizontal"
             android:layout_gravity="center"
             android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <View
+                android:background="@color/iconsAccent"
+                android:layout_weight=".30"
+                android:layout_width="0dp"
+                android:layout_height="2dp"/>
+            <TextView
+                android:id="@+id/lbl_or"
+                android:text="@string/login_or_login_social"
+                android:textSize="18sp"
+                android:textColor="@color/icons"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_weight=".08"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+            <View
+                android:background="@color/iconsAccent"
+                android:layout_weight=".30"
+                android:layout_width="0dp"
+                android:layout_height="2dp"/>
+        </LinearLayout>
         <Button
             android:id="@+id/but_login_facebook"
             android:text="@string/loign_with_facebook"
@@ -114,24 +130,24 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
         android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="60dp">
         <View
             android:background="@color/iconsAccent"
-            android:layout_marginBottom="5dp"
             android:layout_width="match_parent"
             android:layout_height="1dp"/>
-        <TextView
+        <Button
             android:id="@+id/lbl_register_with_us"
             android:text="@string/login_register_with_us"
             android:textSize="18sp"
             android:textColor="@color/icons"
+            android:textAllCaps="false"
+            android:background="@drawable/but_pressed_background"
             android:layout_gravity="center"
             android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
     </LinearLayout>
 
 </RelativeLayout>

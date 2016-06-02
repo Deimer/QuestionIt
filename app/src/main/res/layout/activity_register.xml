@@ -41,6 +41,7 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/layout_body"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -65,12 +66,9 @@
                     android:id="@+id/txt_username"
                     android:inputType="text"
                     android:hint="@string/register_username"
-                    android:textSize="20sp"
-                    android:textColor="@color/icons"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorPrimary"
                     android:textColorHighlight="@color/icons"
-                    android:layout_centerInParent="true"
-                    android:ellipsize="start"
-                    android:gravity="center_horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </com.github.florent37.materialtextfield.MaterialTextField>
@@ -85,12 +83,9 @@
                     android:id="@+id/txt_email"
                     android:inputType="textEmailAddress"
                     android:hint="@string/register_email"
-                    android:textSize="20sp"
-                    android:textColor="@color/icons"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorPrimary"
                     android:textColorHighlight="@color/icons"
-                    android:layout_centerInParent="true"
-                    android:ellipsize="start"
-                    android:gravity="center_horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </com.github.florent37.materialtextfield.MaterialTextField>
@@ -105,12 +100,9 @@
                     android:id="@+id/txt_password"
                     android:inputType="textPassword"
                     android:hint="@string/register_password"
-                    android:textSize="20sp"
-                    android:textColor="@color/icons"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorPrimary"
                     android:textColorHighlight="@color/icons"
-                    android:layout_centerInParent="true"
-                    android:ellipsize="start"
-                    android:gravity="center_horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </com.github.florent37.materialtextfield.MaterialTextField>
@@ -129,6 +121,37 @@
                 app:cb_color="@color/icons"
                 app:cb_pressedRingWidth="10dp"/>
         </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_below="@+id/layout_body"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <View
+            android:background="@color/iconsAccent"
+            android:layout_weight=".30"
+            android:layout_width="0dp"
+            android:layout_height="2dp"/>
+        <TextView
+            android:id="@+id/lbl_or"
+            android:text="@string/login_or_login_social"
+            android:textSize="18sp"
+            android:textColor="@color/icons"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_weight=".08"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <View
+            android:background="@color/iconsAccent"
+            android:layout_weight=".30"
+            android:layout_width="0dp"
+            android:layout_height="2dp"/>
     </LinearLayout>
     <LinearLayout
         android:orientation="horizontal"
