@@ -13,26 +13,24 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.ideamos.web.questionit.Controllers.UserController;
 import com.ideamos.web.questionit.R;
 import com.vstechlab.easyfonts.EasyFonts;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class Welcome extends AppCompatActivity {
 
     private Context context;
+    private UserController userController;
 
     @Bind(R.id.layout_logo)LinearLayout layout_logo;
-    @Bind(R.id.icon_logo)ImageView logo;
     @Bind(R.id.lbl_title_app)TextView lbl_title;
 
     @Override
@@ -49,6 +47,7 @@ public class Welcome extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
         context = this;
+        userController = new UserController(context);
         initInstanceFacebook();
         setupLogo();
         moveLogo();
@@ -81,13 +80,13 @@ public class Welcome extends AppCompatActivity {
     }
 
     public void setupTitle(){
-        lbl_title.setTypeface(EasyFonts.robotoRegular(context));
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 YoYo.with(Techniques.FadeIn )
-                        .duration(1200)
+                        .duration(1000)
                         .playOn(lbl_title);
+                lbl_title.setTypeface(EasyFonts.caviarDreams(context));
                 lbl_title.setVisibility(View.VISIBLE);
             }
         }, 2700);
@@ -97,7 +96,7 @@ public class Welcome extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                openLogin();
+                setupSession();
             }
         }, 6000);
     }
@@ -107,6 +106,25 @@ public class Welcome extends AppCompatActivity {
         startActivity(login);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
+    }
+
+    public void openUpdate(){
+        Intent update = new Intent(Welcome.this, Update.class);
+        startActivity(update);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finish();
+    }
+
+    public void setupSession(){
+        boolean sesionActiva = userController.session();
+        if(sesionActiva){
+            int state = userController.show(context).getState();
+            if(state == 2){
+                openUpdate();
+            }
+        }else{
+            openLogin();
+        }
     }
 
     public void initInstanceFacebook(){
@@ -120,9 +138,9 @@ public class Welcome extends AppCompatActivity {
                 Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
             }
         } catch (PackageManager.NameNotFoundException e) {
-            Log.d("Inicio(NameNotFoundException): ", e.getMessage());
+            Log.d("Welcome(NameNotFoundException): ", e.getMessage());
         } catch (NoSuchAlgorithmException e) {
-            Log.d("Inicio(NoSuchAlgorithmException): ", e.getMessage());
+            Log.d("Welcome(NoSuchAlgorithmException): ", e.getMessage());
         }
     }
 

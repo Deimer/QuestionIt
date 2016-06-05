@@ -50,7 +50,6 @@
                 android:textSize="22sp"
                 android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorPressed"
-                android:gravity="center_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </com.github.florent37.materialtextfield.MaterialTextField>
@@ -69,7 +68,6 @@
                 android:textSize="22sp"
                 android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorPressed"
-                android:gravity="center_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </com.github.florent37.materialtextfield.MaterialTextField>

@@ -26,7 +26,7 @@ public class User {
     @DatabaseField(canBeNull = true)
     private String birth_date;
     @DatabaseField(canBeNull = false)
-    private Boolean status;
+    private Integer state;
     @DatabaseField(canBeNull = false)
     private Boolean social;
     @DatabaseField(canBeNull = true)
@@ -40,14 +40,14 @@ public class User {
     public User(){}
 
     public User(String first_name, String last_name, String username, String email,
-                String birth_date, Boolean status, Boolean social,
-                String avatar, Integer user_id, String token) {
+                String birth_date, Integer state, Boolean social, String avatar,
+                Integer user_id, String token) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.username = username;
         this.email = email;
         this.birth_date = birth_date;
-        this.status = status;
+        this.state = state;
         this.social = social;
         this.avatar = avatar;
         this.user_id = user_id;
@@ -73,8 +73,8 @@ public class User {
     public String getBirth_date() {
         return birth_date;
     }
-    public Boolean getStatus() {
-        return status;
+    public Integer getState() {
+        return state;
     }
     public Boolean getSocial() {
         return social;
@@ -106,8 +106,8 @@ public class User {
     public void setBirth_date(String birth_date) {
         this.birth_date = birth_date;
     }
-    public void setStatus(Boolean status) {
-        this.status = status;
+    public void setState(Integer state) {
+        this.state = state;
     }
     public void setSocial(Boolean social) {
         this.social = social;
@@ -132,7 +132,7 @@ public class User {
             ", username='" + username + '\'' +
             ", email='" + email + '\'' +
             ", birth_date='" + birth_date + '\'' +
-            ", status=" + status +
+            ", state=" + state +
             ", social=" + social +
             ", avatar='" + avatar + '\'' +
             ", user_id=" + user_id +

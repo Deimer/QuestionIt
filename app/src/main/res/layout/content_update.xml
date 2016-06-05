@@ -5,14 +5,89 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="18dp"
+    android:background="#FFFDF2F2"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.ideamos.web.questionit.views.Update"
     tools:showIn="@layout/activity_update">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:text="@string/large_text" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.CardView
+            app:cardCornerRadius="4dp"
+            app:cardElevation="2dp"
+            android:layout_marginTop="30dp"
+            android:elevation="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <com.gregacucnik.EditTextView
+                    android:id="@+id/txt_first_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:inputType="text"
+                    app:ettIconMarginLeft="5dp"
+                    app:ettTextSize="20sp"
+                    app:ettIcon="@mipmap/ic_first_name"
+                    app:ettIconEmpty="@mipmap/ic_first_name"
+                    app:ettIconInEditMode="@mipmap/ic_first_name_light"
+                    app:ettEmptyTexStyle="normal"
+                    app:ettShowHint="true"
+                    app:ettEmptyText="@string/update_first_name"
+                    app:ettEmptyColor="@color/secondary_text"/>
+                <com.gregacucnik.EditTextView
+                    android:id="@+id/txt_last_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:inputType="text"
+                    app:ettIconMarginLeft="5dp"
+                    app:ettTextSize="20sp"
+                    app:ettIcon="@mipmap/ic_last_name"
+                    app:ettIconEmpty="@mipmap/ic_last_name"
+                    app:ettIconInEditMode="@mipmap/ic_last_name_light"
+                    app:ettEmptyTexStyle="normal"
+                    app:ettShowHint="true"
+                    app:ettEmptyText="@string/update_last_name"
+                    app:ettEmptyColor="@color/secondary_text"/>
+                <LinearLayout
+                    android:id="@+id/layout_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <com.gregacucnik.EditTextView
+                        android:id="@+id/txt_birth_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:inputType="date"
+                        android:focusable="false"
+                        app:ettIconMarginLeft="5dp"
+                        app:ettTextSize="20sp"
+                        app:ettIcon="@mipmap/ic_calendar"
+                        app:ettIconEmpty="@mipmap/ic_calendar"
+                        app:ettIconInEditMode="@mipmap/ic_calendar_light"
+                        app:ettEmptyTexStyle="normal"
+                        app:ettShowHint="true"
+                        app:ettEmptyText="@string/update_date_birth"
+                        app:ettEmptyColor="@color/secondary_text"/>
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/circle_next_white"
+            app:fab_showShadow="true"
+            app:fab_colorNormal="@color/colorPrimary"
+            app:fab_colorPressed="@color/colorPrimaryDark"
+            app:fab_colorRipple="@color/colorPrimaryLight"/>
+    </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>
