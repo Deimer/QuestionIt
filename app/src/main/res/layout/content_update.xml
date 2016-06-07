@@ -55,26 +55,17 @@
                     app:ettShowHint="true"
                     app:ettEmptyText="@string/update_last_name"
                     app:ettEmptyColor="@color/secondary_text"/>
-                <LinearLayout
-                    android:id="@+id/layout_date"
+                <TextView
+                    android:id="@+id/txt_birth_date"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <com.gregacucnik.EditTextView
-                        android:id="@+id/txt_birth_date"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:inputType="date"
-                        android:focusable="false"
-                        app:ettIconMarginLeft="5dp"
-                        app:ettTextSize="20sp"
-                        app:ettIcon="@mipmap/ic_calendar"
-                        app:ettIconEmpty="@mipmap/ic_calendar"
-                        app:ettIconInEditMode="@mipmap/ic_calendar_light"
-                        app:ettEmptyTexStyle="normal"
-                        app:ettShowHint="true"
-                        app:ettEmptyText="@string/update_date_birth"
-                        app:ettEmptyColor="@color/secondary_text"/>
-                </LinearLayout>
+                    android:layout_height="60dp"
+                    android:textSize="20sp"
+                    android:gravity="center|left"
+                    android:drawableLeft="@mipmap/ic_calendar"
+                    android:paddingLeft="6dp"
+                    android:drawablePadding="34dp"
+                    android:text="@string/update_date_birth"
+                    android:textColor="@color/secondary_text"/>
             </LinearLayout>
         </android.support.v7.widget.CardView>
         <com.github.clans.fab.FloatingActionButton

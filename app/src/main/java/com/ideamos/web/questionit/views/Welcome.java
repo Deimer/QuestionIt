@@ -116,14 +116,15 @@ public class Welcome extends AppCompatActivity {
     }
 
     public void setupSession(){
-        boolean sesionActiva = userController.session();
-        if(sesionActiva){
+        boolean session = userController.session();
+        if(session){
             int state = userController.show(context).getState();
             if(state == 2){
                 openUpdate();
             }
         }else{
             openLogin();
+            //openUpdate();
         }
     }
 

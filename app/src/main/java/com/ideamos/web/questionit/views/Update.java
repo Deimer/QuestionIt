@@ -8,8 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-
+import android.widget.TextView;
 import com.google.gson.JsonObject;
 import com.gregacucnik.EditTextView;
 import com.ideamos.web.questionit.Controllers.UserController;
@@ -20,6 +19,8 @@ import com.ideamos.web.questionit.R;
 import com.ideamos.web.questionit.Service.Service;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import java.util.Calendar;
+import java.util.Date;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -43,8 +44,7 @@ public class Update extends AppCompatActivity  implements DatePickerDialog.OnDat
     @Bind(R.id.cv_photo_profile)CircleImageView cv_profile;
     @Bind(R.id.txt_first_name)EditTextView txt_first_name;
     @Bind(R.id.txt_last_name)EditTextView txt_last_name;
-    @Bind(R.id.txt_birth_date)EditTextView txt_birth_date;
-    @Bind(R.id.layout_date)LinearLayout layout_date;
+    @Bind(R.id.txt_birth_date)TextView lbl_birth_date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,50 +72,62 @@ public class Update extends AppCompatActivity  implements DatePickerDialog.OnDat
     }
 
     public void setupDatePicker(){
-        layout_date.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        lbl_birth_date.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                Calendar now = Calendar.getInstance();
-                DatePickerDialog dpd = DatePickerDialog.newInstance(
-                        Update.this,
-                        now.get(Calendar.YEAR),
-                        now.get(Calendar.MONTH),
-                        now.get(Calendar.DAY_OF_MONTH)
-                );
-                dpd.dismissOnPause(true);
-                dpd.showYearPickerFirst(true);
-                dpd.setAccentColor(getResources().getColor(R.color.colorPrimary));
-                dpd.setTitle("Escoja su fecha");
-                dpd.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialogInterface) {
-                        Log.d("TimePicker", "Dialog was cancelled");
-                    }
-                });
-                dpd.show(getFragmentManager(), "Timepickerdialog");
+            public void onClick(View v) {
+                showDialogDate();
             }
         });
+    }
+
+    public void showDialogDate(){
+        Calendar now = Calendar.getInstance();
+
+        Date d = new Date();
+        Calendar before = Calendar.getInstance();
+        before.setTime(d);
+        before.add(Calendar.YEAR, -12);
+
+        DatePickerDialog dpd = DatePickerDialog.newInstance(
+                Update.this,
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH)
+        );
+        dpd.dismissOnPause(true);
+        dpd.vibrate(false);
+        dpd.setMaxDate(before);
+        dpd.showYearPickerFirst(true);
+        dpd.setAccentColor(getResources().getColor(R.color.colorPrimary));
+        dpd.setTitle("Escoja su fecha");
+        dpd.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                Log.d("TimePicker", "Dialog was cancelled");
+            }
+        });
+        dpd.show(getFragmentManager(), "Timepickerdialog");
     }
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         String date = dayOfMonth+"-"+(++monthOfYear)+"-"+year;
-        txt_birth_date.setText(date);
+        lbl_birth_date.setText(date);
     }
 
     @OnClick(R.id.fab_update)
     public void clickUpdate(){
         String fname = txt_first_name.getText();
         String lname = txt_last_name.getText();
-        String bdate = txt_birth_date.getText();
+        String bdate = lbl_birth_date.getText().toString();
         if (fname.equalsIgnoreCase("") || lname.equalsIgnoreCase("")) {
             dialog.dialogWarning("", "Antes de continuar, debes proporcionar tus credenciales.");
         } else {
             if(bdate.equalsIgnoreCase("")){
                 dialog.dialogWarning("", "Debes proporcionar tu fecha de nacimiento.");
             }else{
-                boolean hayConexion = validate.connect();
-                if (hayConexion) {
+                boolean connection = validate.connect();
+                if (connection) {
                     update(fname, lname, bdate);
                 } else {
                     dialog.dialogWarning("Error de conexión", "No se pudo detectar una conexión estable a internet.");

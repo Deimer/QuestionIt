@@ -6,20 +6,29 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
-
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.ideamos.web.questionit.Controllers.UserController;
+import com.ideamos.web.questionit.Helpers.DataOption;
 import com.ideamos.web.questionit.Helpers.SweetDialog;
 import com.ideamos.web.questionit.Helpers.Validate;
 import com.ideamos.web.questionit.Models.User;
 import com.ideamos.web.questionit.R;
 import com.ideamos.web.questionit.Service.Service;
 import com.vstechlab.easyfonts.EasyFonts;
-
+import org.json.JSONObject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -35,15 +44,20 @@ public class Login extends AppCompatActivity {
     private UserController userController;
     private SweetDialog dialog;
     private Validate validate;
+    private DataOption data;
+    private CallbackManager callbackManager;
 
     //Elementos
     @Bind(R.id.lbl_title)TextView lbl_title;
     @Bind(R.id.txt_email)EditText txt_email;
     @Bind(R.id.txt_password)EditText txt_password;
+    @Bind(R.id.login_button_facebook)LoginButton login_button_facebook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         setupActivity();
@@ -54,8 +68,10 @@ public class Login extends AppCompatActivity {
         userController = new UserController(context);
         dialog = new SweetDialog(context);
         validate = new Validate(context);
+        data = new DataOption();
         setupBar();
         setupConfig();
+        initFacebookInstances();
     }
 
     public void setupBar(){
@@ -91,8 +107,8 @@ public class Login extends AppCompatActivity {
         } else {
             if (validate.isEmailValid(email)) {
                 if (validate.isPasswordValid(password)) {
-                    boolean hayConexion = validate.connect();
-                    if (hayConexion) {
+                    boolean connection = validate.connect();
+                    if (connection) {
                         login(email, password);
                     } else {
                         dialog.dialogWarning("Error de conexión", "No se pudo detectar una conexión estable a internet.");
@@ -155,6 +171,83 @@ public class Login extends AppCompatActivity {
         startActivity(update);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
+    }
+
+//Funciones de login y registro social
+
+    @OnClick(R.id.but_login_facebook)
+    public void onClickFacebook(){
+        login_button_facebook.performClick();
+        loginSocial();
+    }
+
+    public void initFacebookInstances(){
+        login_button_facebook.setReadPermissions(data.scopesUserFacebook());
+        callbackManager = CallbackManager.Factory.create();
+    }
+
+    public void loginSocial(){
+        if (validate.connect()){
+            dialog.dialogProgress("Validando usuario...");
+            login_button_facebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(final LoginResult loginResult) {
+                    GraphRequest request = GraphRequest.newMeRequest(
+                            loginResult.getAccessToken(),
+                            new GraphRequest.GraphJSONObjectCallback() {
+                                @Override
+                                public void onCompleted(JSONObject object, GraphResponse response) {
+                                    JsonObject json = data.convertToJsonGson(object);
+                                    String token = loginResult.getAccessToken().getToken();
+                                    String email_social = json.get("email").getAsString();
+                                    String uid_provider = json.get("id").getAsString();
+                                    String full_name = json.get("name").getAsString();
+                                    String username = validate.formatUsername(json.get("email").getAsString());
+                                    String avatar = json
+                                            .get("picture").getAsJsonObject()
+                                            .get("data").getAsJsonObject()
+                                            .get("url").getAsString();
+                                    System.out.println(
+                                            "{ Token: " + token + ", " +
+                                            "id_provider: " + uid_provider + ", " +
+                                            "email_social: " + email_social + ", " +
+                                            "full_name: " + full_name + ", " +
+                                            "user_name: " + username + ", " +
+                                            "avatar: " + avatar + " }"
+                                    );
+                                    System.out.println(json);
+                                }
+                            }
+                    );
+                    Bundle parameters = new Bundle();
+                    parameters.putString("fields", "id,name,email,gender,birthday,picture.type(large)");
+                    request.setParameters(parameters);
+                    request.executeAsync();
+                }
+
+                @Override
+                public void onCancel() {
+                    dialog.cancelarProgress();
+                    dialog.dialogWarning("", "Cancelado por el usuario");
+                }
+
+                @Override
+                public void onError(FacebookException error) {
+                    dialog.cancelarProgress();
+                    dialog.dialogError("Error", "Error on Login, check your facebook app_id");
+                }
+            });
+            dialog.cancelarProgress();
+            this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        } else {
+            dialog.dialogWarning("Error de conexión", "No se pudo detectar una conexión estable a internet.");
+        }
+    }
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
 }
