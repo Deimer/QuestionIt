@@ -175,5 +175,16 @@
             android:layout_width="300dp"
             android:layout_height="match_parent" />
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_social"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/register_button_facebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
 </RelativeLayout>

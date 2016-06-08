@@ -53,11 +53,6 @@ public class Validate {
         return password.length() >= 6;
     }
 
-    public String formatUsername(String email){
-        String[] parts = email.split("@");
-        return parts[0];
-    }
-
     public String assignUserInvalid(String email, String usernameSocial){
         String username;
         if(usernameSocial == null){

@@ -164,6 +164,45 @@ public class Login extends AppCompatActivity {
         });
     }
 
+    public void socialLogin(String provider, String id_provider, String email, String avatar){
+        dialog.dialogProgress("Iniciando sesión...");
+        final String url = getString(R.string.url_con);
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setEndpoint(url)
+                .build();
+        Service api = restAdapter.create(Service.class);
+        api.socialLogin(provider, id_provider, email, avatar, new Callback<JsonObject>() {
+            @Override
+            public void success(JsonObject jsonObject, Response response) {
+                boolean success = jsonObject.get("success").getAsBoolean();
+                if (success) {
+                    String token = jsonObject.get("token").getAsString();
+                    User user = new Gson().fromJson(jsonObject.get("user"), User.class);
+                    user.setToken(token);
+                    if(userController.create(user)){
+                        dialog.cancelarProgress();
+                        next();
+                    }
+                } else {
+                    String message = jsonObject.get("message").getAsString();
+                    dialog.cancelarProgress();
+                    dialog.dialogWarning("Error", message);
+                }
+            }
+            @Override
+            public void failure(RetrofitError error) {
+                dialog.cancelarProgress();
+                try {
+                    dialog.dialogError("Error", "Se ha producido un error durante el proceso, intentarlo más tarde.");
+                    Log.e("Login(socialLogin)", "Error: " + error.getBody().toString());
+                } catch (Exception ex) {
+                    Log.e("Login(socialLogin)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
+                }
+            }
+        });
+    }
+
 //Funciones de la app
 
     public void next(){
@@ -198,29 +237,20 @@ public class Login extends AppCompatActivity {
                                 @Override
                                 public void onCompleted(JSONObject object, GraphResponse response) {
                                     JsonObject json = data.convertToJsonGson(object);
-                                    String token = loginResult.getAccessToken().getToken();
+                                    String provider = getString(R.string.provider_social);
+                                    String id_provider = json.get("id").getAsString();
                                     String email_social = json.get("email").getAsString();
-                                    String uid_provider = json.get("id").getAsString();
-                                    String full_name = json.get("name").getAsString();
-                                    String username = validate.formatUsername(json.get("email").getAsString());
                                     String avatar = json
                                             .get("picture").getAsJsonObject()
                                             .get("data").getAsJsonObject()
                                             .get("url").getAsString();
-                                    System.out.println(
-                                            "{ Token: " + token + ", " +
-                                            "id_provider: " + uid_provider + ", " +
-                                            "email_social: " + email_social + ", " +
-                                            "full_name: " + full_name + ", " +
-                                            "user_name: " + username + ", " +
-                                            "avatar: " + avatar + " }"
-                                    );
                                     System.out.println(json);
+                                    //socialLogin(provider, id_provider, email_social, avatar);
                                 }
                             }
                     );
                     Bundle parameters = new Bundle();
-                    parameters.putString("fields", "id,name,email,gender,birthday,picture.type(large)");
+                    parameters.putString("fields", "id,email,picture.type(large)");
                     request.setParameters(parameters);
                     request.executeAsync();
                 }

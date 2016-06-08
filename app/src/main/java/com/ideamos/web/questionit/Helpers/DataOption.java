@@ -23,4 +23,9 @@ public class DataOption {
         return (JsonObject)jsonParser.parse(object.toString());
     }
 
+    public String formatUsername(String email){
+        String[] parts = email.split("@");
+        return parts[0];
+    }
+
 }

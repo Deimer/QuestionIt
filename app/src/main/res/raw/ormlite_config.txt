@@ -1,5 +1,5 @@
 #
-# generated on 2016/06/06 01:28:37
+# generated on 2016/06/07 07:27:31
 #
 # --table-start--
 dataClass=com.ideamos.web.questionit.Models.SocialUser
@@ -26,7 +26,7 @@ fieldName=provider
 canBeNull=false
 # --field-end--
 # --field-start--
-fieldName=uid_provider
+fieldName=id_provider
 canBeNull=false
 # --field-end--
 # --field-start--

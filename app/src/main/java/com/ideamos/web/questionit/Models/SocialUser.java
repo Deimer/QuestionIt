@@ -29,21 +29,21 @@ public class SocialUser {
     @DatabaseField(canBeNull = false)
     private String provider;
     @DatabaseField(canBeNull = false)
-    private String uid_provider;
+    private String id_provider;
     @DatabaseField(canBeNull = false)
     private String social_token;
 
     public SocialUser() {}
 
     public SocialUser(int user_id, String full_name, String username,
-                      String avatar, String provider, String uid_provider,
+                      String avatar, String provider, String id_provider,
                       String social_token) {
         this.user_id = user_id;
         this.full_name = full_name;
         this.username = username;
         this.avatar = avatar;
         this.provider = provider;
-        this.uid_provider = uid_provider;
+        this.id_provider = id_provider;
         this.social_token = social_token;
     }
 
@@ -66,8 +66,8 @@ public class SocialUser {
     public String getProvider() {
         return provider;
     }
-    public String getUid_provider() {
-        return uid_provider;
+    public String getId_provider() {
+        return id_provider;
     }
     public String getSocial_token() {
         return social_token;
@@ -90,8 +90,8 @@ public class SocialUser {
     public void setProvider(String provider) {
         this.provider = provider;
     }
-    public void setUid_provider(String uid_provider) {
-        this.uid_provider = uid_provider;
+    public void setId_provider(String id_provider) {
+        this.id_provider = id_provider;
     }
     public void setSocial_token(String social_token) {
         this.social_token = social_token;
@@ -107,7 +107,7 @@ public class SocialUser {
             ", username='" + username + '\'' +
             ", avatar='" + avatar + '\'' +
             ", provider='" + provider + '\'' +
-            ", uid_provider='" + uid_provider + '\'' +
+            ", id_provider='" + id_provider + '\'' +
             ", social_token='" + social_token + '\'' +
         '}';
     }
