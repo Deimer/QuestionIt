@@ -245,7 +245,7 @@ public class Login extends AppCompatActivity {
                                             .get("data").getAsJsonObject()
                                             .get("url").getAsString();
                                     System.out.println(json);
-                                    //socialLogin(provider, id_provider, email_social, avatar);
+                                    socialLogin(provider, id_provider, email_social, avatar);
                                 }
                             }
                     );

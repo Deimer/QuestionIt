@@ -161,7 +161,6 @@ public class Register extends Activity {
                                     social.setId_provider(json.get("id").getAsString());
                                     social.setSocial_token(loginResult.getAccessToken().getToken());
                                     System.out.println(social.toString());
-
                                     socialRegister(social);
                                 }
                             }
