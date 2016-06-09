@@ -5,7 +5,8 @@
     <string name="title_activity_login">Login</string>
 
     <!-- Cadenas de conexion api -->
-    <string name="url_con">http://192.168.1.3:80</string>
+    <string name="url_con">http://192.168.0.200:80</string>
+    <string name="url_test">http://192.168.0.200:80</string>
     <!-- Cadena conexion facebook -->
     <string name="facebook_app_id">1643742285950373</string>
     <string name="provider_social">facebook</string>

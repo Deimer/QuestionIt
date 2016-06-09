@@ -115,16 +115,24 @@ public class Welcome extends AppCompatActivity {
         finish();
     }
 
+    public void openTimeline(){
+        Intent timeline = new Intent(Welcome.this, TimeLine.class);
+        startActivity(timeline);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finish();
+    }
+
     public void setupSession(){
         boolean session = userController.session();
         if(session){
             int state = userController.show(context).getState();
             if(state == 2){
                 openUpdate();
+            } else if(state == 1){
+                openTimeline();
             }
         }else{
             openLogin();
-            //openUpdate();
         }
     }
 
