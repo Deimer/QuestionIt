@@ -2,6 +2,7 @@ package com.ideamos.web.questionit.views;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +18,7 @@ import com.ideamos.web.questionit.Helpers.Validate;
 import com.ideamos.web.questionit.Models.User;
 import com.ideamos.web.questionit.R;
 import com.ideamos.web.questionit.Service.Service;
+import com.squareup.picasso.Picasso;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import java.util.Calendar;
 import java.util.Date;
@@ -25,12 +27,14 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import jp.wasabeef.picasso.transformations.BlurTransformation;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class Update extends AppCompatActivity  implements DatePickerDialog.OnDateSetListener{
+public class Update extends AppCompatActivity
+        implements DatePickerDialog.OnDateSetListener{
 
     //Variables de entorno
     private Context context;
@@ -61,6 +65,7 @@ public class Update extends AppCompatActivity  implements DatePickerDialog.OnDat
         dialog = new SweetDialog(context);
         setupToolbar();
         setupDatePicker();
+        loadImageProfile();
     }
 
     public void setupToolbar(){
@@ -82,12 +87,10 @@ public class Update extends AppCompatActivity  implements DatePickerDialog.OnDat
 
     public void showDialogDate(){
         Calendar now = Calendar.getInstance();
-
         Date d = new Date();
         Calendar before = Calendar.getInstance();
         before.setTime(d);
         before.add(Calendar.YEAR, -12);
-
         DatePickerDialog dpd = DatePickerDialog.newInstance(
                 Update.this,
                 now.get(Calendar.YEAR),
@@ -136,25 +139,29 @@ public class Update extends AppCompatActivity  implements DatePickerDialog.OnDat
         }
     }
 
-    public void update(String fname, String lname, String bdate){
-        dialog.dialogProgress("Iniciando sesión...");
-        final String url = getString(R.string.url_con);
+    public void update(final String fname, final String lname, final String bdate){
+        dialog.dialogProgress("Actualizando información...");
+        final String url = getString(R.string.url_test);
         int user_id = userController.show(context).getUser_id();
+        String token = userController.show(context).getToken();
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(url)
                 .build();
         Service api = restAdapter.create(Service.class);
-        api.updateUser(user_id, fname, lname, bdate, new Callback<JsonObject>() {
+        api.updateUser(token, user_id, fname, lname, bdate, new Callback<JsonObject>() {
             @Override
             public void success(JsonObject jsonObject, Response response) {
                 boolean success = jsonObject.get("success").getAsBoolean();
                 if (success) {
                     User user = userController.show(context);
-                    user.setState(2);
+                    user.setFirst_name(fname);
+                    user.setLast_name(lname);
+                    user.setBirth_date(bdate);
+                    user.setState(1);
                     if(userController.update(user)){
                         dialog.cancelarProgress();
-                        //next();
+                        next();
                     }
                 } else {
                     String message = jsonObject.get("message").getAsString();
@@ -168,12 +175,28 @@ public class Update extends AppCompatActivity  implements DatePickerDialog.OnDat
                 dialog.cancelarProgress();
                 try {
                     dialog.dialogError("Error", "Se ha producido un error durante el proceso, intentarlo más tarde.");
-                    Log.e("Login(login)", "Error: " + error.getBody().toString());
+                    Log.e("Update(update)", "Error: " + error.getBody().toString());
                 } catch (Exception ex) {
-                    Log.e("Login(login)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
+                    Log.e("Update(update)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
                 }
             }
         });
+    }
+
+    public void next(){
+        Intent timeLine = new Intent(Update.this, TimeLine.class);
+        startActivity(timeLine);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finish();
+    }
+
+    public void loadImageProfile(){
+        Picasso.with(context)
+                .load(R.drawable.background_collapsing)
+                .transform(new BlurTransformation(context, 25, 1))
+                .centerCrop()
+                .fit()
+                .into(img_user);
     }
 
 }

@@ -54,6 +54,7 @@
         <activity
             android:name=".views.Update"
             android:label="@string/title_activity_update"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -64,6 +65,7 @@
         <activity
             android:name=".views.TimeLine"
             android:label="@string/title_activity_time_line"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

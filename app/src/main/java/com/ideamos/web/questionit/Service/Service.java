@@ -5,6 +5,8 @@ import retrofit.Callback;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
+import retrofit.http.Path;
+import retrofit.http.Query;
 
 /**
  * Creado por Ideamosweb on 26/05/2016.
@@ -61,7 +63,8 @@ public interface Service {
     @FormUrlEncoded
     @POST("/api/user/update/{id}")
     void updateUser(
-            @Field("id")Integer user_id,
+            @Query("token") String token,
+            @Path("id") Integer user_id,
             @Field("first_name")String first_name,
             @Field("last_name")String last_name,
             @Field("birth_date")String birth_date,

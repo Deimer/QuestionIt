@@ -17,14 +17,17 @@ import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.ideamos.web.questionit.Controllers.UserController;
 import com.ideamos.web.questionit.Helpers.DataOption;
 import com.ideamos.web.questionit.Helpers.SweetDialog;
 import com.ideamos.web.questionit.Helpers.Validate;
 import com.ideamos.web.questionit.Models.SocialUser;
+import com.ideamos.web.questionit.Models.User;
 import com.ideamos.web.questionit.R;
 import com.ideamos.web.questionit.Service.Service;
 import com.vstechlab.easyfonts.EasyFonts;
@@ -85,7 +88,7 @@ public class Register extends Activity {
 
     public void register(String username, final String email, String password){
         dialog.dialogProgress("Registrando...");
-        final String url = getString(R.string.url_con);
+        final String url = getString(R.string.url_test);
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(url)
@@ -99,7 +102,7 @@ public class Register extends Activity {
                     String message = jsonObject.get("message").getAsString();
                     dialog.cancelarProgress();
                     String title = "¡Registrado!";
-                    dialogRegister(title, message, email);
+                    dialogRegister(title, message, email, false);
                 }
             }
             @Override
@@ -115,14 +118,54 @@ public class Register extends Activity {
         });
     }
 
-    public void socialRegister(SocialUser social){
+    public void socialRegister(User user, SocialUser social){
         dialog.dialogProgress("Registrando...");
-        final String url = getString(R.string.url_con);
+        final String url = getString(R.string.url_test);
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(url)
                 .build();
         Service api = restAdapter.create(Service.class);
+        api.socialRegister(
+                //user
+                user.getUsername(), user.getEmail(), user.getUsername(), user.getFirst_name(),
+                user.getLast_name(), user.getBirth_date(),
+                //social
+                social.getFull_name(), social.getAvatar(), social.getProvider(),
+                social.getId_provider(), social.getSocial_token(),
+                new Callback<JsonObject>() {
+                    @Override
+                    public void success(JsonObject jsonObject, Response response) {
+                        boolean success = jsonObject.get("success").getAsBoolean();
+                        if (success) {
+                            String message = jsonObject.get("message").getAsString();
+                            String token = jsonObject.get("token").getAsString();
+                            User user = new Gson().fromJson(jsonObject.get("user"), User.class);
+                            user.setToken(token);
+                            if(userController.create(user)){
+                                dialog.cancelarProgress();
+                                String title = "¡Registrado!";
+                                dialogRegister(title, message, "", true);
+                            }
+                        } else {
+                            String message = jsonObject.get("message").getAsString();
+                            LoginManager.getInstance().logOut();
+                            dialog.cancelarProgress();
+                            dialog.dialogWarning("Error", message);
+                        }
+                    }
+                    @Override
+                    public void failure(RetrofitError error) {
+                        LoginManager.getInstance().logOut();
+                        dialog.cancelarProgress();
+                        try {
+                            dialog.dialogError("Error", "Se ha producido un error durante el proceso, intentarlo más tarde.");
+                            Log.e("Login(socialLogin)", "Error: " + error.getBody().toString());
+                        } catch (Exception ex) {
+                            Log.e("Login(socialLogin)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
+                        }
+                    }
+                });
     }
 
 //Funciones e interacciones con apis sociales
@@ -150,19 +193,11 @@ public class Register extends Activity {
                                 @Override
                                 public void onCompleted(JSONObject object, GraphResponse response) {
                                     JsonObject json = data.convertToJsonGson(object);
-                                    SocialUser social = new SocialUser();
-                                    social.setFull_name(json.get("name").getAsString());
-                                    social.setUsername(data.formatUsername(json.get("email").getAsString()));
-                                    social.setAvatar(json
-                                            .get("picture").getAsJsonObject()
-                                            .get("data").getAsJsonObject()
-                                            .get("url").getAsString());
-                                    social.setProvider(getString(R.string.provider_social));
-                                    social.setId_provider(json.get("id").getAsString());
-                                    social.setSocial_token(loginResult.getAccessToken().getToken());
-                                    System.out.println(social.toString());
-
-                                    socialRegister(social);
+                                    User user = data.jsonToUser(json);
+                                    SocialUser social = data.jsonToSocialUser(json, loginResult, context);
+                                    System.out.println("User: " + user.toString());
+                                    System.out.println("Social: " + social.toString());
+                                    socialRegister(user, social);
                                 }
                             }
                     );
@@ -199,7 +234,7 @@ public class Register extends Activity {
 
 //Funciones de alertas y dialogs
 
-    public void dialogRegister(String title, String message, final String email){
+    public void dialogRegister(String title, String message, final String email, final boolean social){
         new SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
                 .setTitleText(title)
                 .setContentText(message)
@@ -208,9 +243,14 @@ public class Register extends Activity {
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.dismissWithAnimation();
-                        Intent login = new Intent(Register.this, Login.class);
-                        login.putExtra("email", email);
-                        startActivity(login);
+                        if(social){
+                            Intent timeline = new Intent(Register.this, TimeLine.class);
+                            startActivity(timeline);
+                        } else {
+                            Intent login = new Intent(Register.this, Login.class);
+                            login.putExtra("email", email);
+                            startActivity(login);
+                        }
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         finish();
                     }

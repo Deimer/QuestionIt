@@ -16,6 +16,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.gson.Gson;
@@ -126,7 +127,7 @@ public class Login extends AppCompatActivity {
 
     public void login(String email, String password) {
         dialog.dialogProgress("Iniciando sesión...");
-        final String url = getString(R.string.url_con);
+        final String url = getString(R.string.url_test);
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(url)
@@ -142,7 +143,7 @@ public class Login extends AppCompatActivity {
                     user.setToken(token);
                     if(userController.create(user)){
                         dialog.cancelarProgress();
-                        next();
+                        next(user.getState());
                     }
                 } else {
                     String message = jsonObject.get("message").getAsString();
@@ -166,7 +167,7 @@ public class Login extends AppCompatActivity {
 
     public void socialLogin(String provider, String id_provider, String email, String avatar){
         dialog.dialogProgress("Iniciando sesión...");
-        final String url = getString(R.string.url_con);
+        final String url = getString(R.string.url_test);
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(url)
@@ -182,16 +183,18 @@ public class Login extends AppCompatActivity {
                     user.setToken(token);
                     if(userController.create(user)){
                         dialog.cancelarProgress();
-                        next();
+                        next(user.getState());
                     }
                 } else {
                     String message = jsonObject.get("message").getAsString();
+                    LoginManager.getInstance().logOut();
                     dialog.cancelarProgress();
                     dialog.dialogWarning("Error", message);
                 }
             }
             @Override
             public void failure(RetrofitError error) {
+                LoginManager.getInstance().logOut();
                 dialog.cancelarProgress();
                 try {
                     dialog.dialogError("Error", "Se ha producido un error durante el proceso, intentarlo más tarde.");
@@ -205,9 +208,14 @@ public class Login extends AppCompatActivity {
 
 //Funciones de la app
 
-    public void next(){
-        Intent update = new Intent(Login.this, Update.class);
-        startActivity(update);
+    public void next(int state){
+        if(state == 1){
+            Intent timeLine = new Intent(Login.this, TimeLine.class);
+            startActivity(timeLine);
+        } else if(state == 2) {
+            Intent update = new Intent(Login.this, Update.class);
+            startActivity(update);
+        }
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
     }
@@ -244,8 +252,7 @@ public class Login extends AppCompatActivity {
                                             .get("picture").getAsJsonObject()
                                             .get("data").getAsJsonObject()
                                             .get("url").getAsString();
-                                    System.out.println(json);
-                                    //socialLogin(provider, id_provider, email_social, avatar);
+                                    socialLogin(provider, id_provider, email_social, avatar);
                                 }
                             }
                     );
