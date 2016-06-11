@@ -37,4 +37,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_time_line">TimeLine</string>
     <string name="texto">Si éste XML es usado como el layout de una Activity, con los campos delTextView establecidos a valores significativos, entonces así es cómo se renderizaría en un dispositivo Android</string>
+    <string name="post_username">Username</string>
+    <string name="title_activity_post">Post</string>
 </resources>

@@ -6,6 +6,8 @@ import com.ideamos.web.questionit.Database.DatabaseHelper;
 import com.ideamos.web.questionit.Models.User;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.stmt.UpdateBuilder;
+
 import java.util.List;
 
 /**
@@ -122,6 +124,21 @@ public class UserController {
             Log.e("UserController(show)", "Error: " + ex.getMessage());
         }
         return users;
+    }
+
+    public boolean changeToken(String new_token){
+        boolean res = true;
+        try {
+            helper = OpenHelperManager.getHelper(contexto,DatabaseHelper.class);
+            RuntimeExceptionDao<User, Integer> userDao = helper.getUsuarioRuntimeDao();
+            User user = userDao.queryForId(1);
+            user.setToken(new_token);
+            userDao.update(user);
+        } catch (Exception ex) {
+            res = false;
+            Log.e("UserController(logout)", "Error: " + ex.toString());
+        }
+        return res;
     }
 
 }

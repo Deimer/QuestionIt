@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import retrofit.Callback;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
+import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
@@ -68,6 +69,12 @@ public interface Service {
             @Field("first_name")String first_name,
             @Field("last_name")String last_name,
             @Field("birth_date")String birth_date,
+            Callback<JsonObject> cb
+    );
+
+    @GET("/api/posts/all")
+    void getPosts(
+            @Query("token") String token,
             Callback<JsonObject> cb
     );
 

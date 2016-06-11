@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.ideamos.web.questionit.Models.Post;
 import com.ideamos.web.questionit.Models.SocialUser;
 import com.ideamos.web.questionit.Models.User;
 import com.ideamos.web.questionit.R;
@@ -30,6 +31,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
     private RuntimeExceptionDao<User, Integer> userRuntimeDao = null;
     private Dao<SocialUser, Integer> socialDao = null;
     private RuntimeExceptionDao<SocialUser, Integer> socialRuntimeDao = null;
+    private Dao<Post, Integer> postDao = null;
+    private RuntimeExceptionDao<Post, Integer> postRuntimeDao = null;
 
     /*Funcion que permite crear la base de datos cuando inicia la aplicacion
     * Usa como parametros;
@@ -41,6 +44,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
         try {
             TableUtils.createTable(source, User.class);
             TableUtils.createTable(source, SocialUser.class);
+            TableUtils.createTable(source, Post.class);
         } catch (SQLException sqlEx) {
             Log.e("DatabaseHelper(onCreate)", "Error: " + sqlEx.getMessage());
             throw new RuntimeException(sqlEx);
@@ -59,6 +63,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
         try {
             TableUtils.dropTable(source, User.class, true);
             TableUtils.dropTable(source, SocialUser.class, true);
+            TableUtils.dropTable(source, Post.class, true);
             onCreate(db, source);
         } catch (SQLException sqlEx) {
             Log.e("DatabaseHelper(onUpgrade)", "Error: " + sqlEx.getMessage());
@@ -76,9 +81,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
             ConnectionSource source = this.getConnectionSource();
             TableUtils.dropTable(source, User.class, true);
             TableUtils.dropTable(source, SocialUser.class, true);
+            TableUtils.dropTable(source, Post.class, true);
             //Recreacion de las tablas
             TableUtils.createTable(source, User.class);
             TableUtils.createTable(source, SocialUser.class);
+            TableUtils.createTable(source, Post.class);
         }catch (SQLException sqlEx){
             Log.i("DatabaseHelper(onResetDataBase)", "Error: " + sqlEx.getMessage());
             throw new RuntimeException(sqlEx);
@@ -91,6 +98,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
         userRuntimeDao = null;
         socialDao = null;
         socialRuntimeDao = null;
+        postDao = null;
+        postRuntimeDao = null;
     }
 
     public Dao<User, Integer> getUserDao() throws SQLException {
@@ -109,6 +118,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
     public RuntimeExceptionDao<SocialUser, Integer> getSocialRuntimeDao() {
         if(socialRuntimeDao == null) socialRuntimeDao = getRuntimeExceptionDao(SocialUser.class);
         return socialRuntimeDao;
+    }
+
+    public Dao<Post, Integer> getPostDao() throws SQLException {
+        if(postDao == null) postDao = getDao(Post.class);
+        return postDao;
+    }
+    public RuntimeExceptionDao<Post, Integer> getPostRuntimeDao() {
+        if(postRuntimeDao == null) postRuntimeDao = getRuntimeExceptionDao(Post.class);
+        return postRuntimeDao;
     }
 
 }
