@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.michaldrabik.tapbarmenulib.TapBarMenu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tapBarMenu"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:layout_gravity="bottom|center"
+    app:tbm_backgroundColor="@color/colorPrimary"
+    android:layout_marginBottom="24dp"
+    android:orientation="vertical"
+    tools:context="com.ideamos.web.questionit.views.Post"
+    tools:showIn="@layout/activity_post">
+
+    <ImageView
+        android:id="@+id/img_like"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:src="@mipmap/ic_like"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@+id/img_dislike"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:src="@mipmap/ic_dislike"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@+id/img_favorite"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:src="@mipmap/ic_no_favorite"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@+id/img_answer"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:src="@mipmap/ic_edit_white"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+
+</com.michaldrabik.tapbarmenulib.TapBarMenu>
