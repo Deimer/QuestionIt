@@ -85,7 +85,7 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name=".views.Post"
+            android:name=".views.DetailPost"
             android:label="@string/title_activity_post"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

@@ -3,47 +3,55 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/tapBarMenu"
+    app:tbm_menuAnchor="bottom"
+    app:tbm_backgroundColor="@color/colorPrimary"
+    android:id="@+id/tap_bar_menu"
     android:layout_width="match_parent"
     android:layout_height="56dp"
-    android:layout_gravity="bottom|center"
-    app:tbm_backgroundColor="@color/colorPrimary"
+    android:layout_gravity="bottom"
     android:layout_marginBottom="24dp"
-    android:orientation="vertical"
-    tools:context="com.ideamos.web.questionit.views.Post"
+    tools:context=".views.DetailPost"
     tools:showIn="@layout/activity_post">
 
     <ImageView
-        android:id="@+id/img_like"
+        android:id="@+id/item1"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:src="@mipmap/ic_like"
+        android:src="@mipmap/ic_like_white"
         android:layout_weight="1"
         android:layout_width="0dp"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="visible" />
     <ImageView
-        android:id="@+id/img_dislike"
+        android:id="@+id/item2"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:src="@mipmap/ic_dislike"
+        android:src="@mipmap/ic_dislike_white"
         android:layout_weight="1"
         android:layout_width="0dp"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="visible"/>
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"/>
     <ImageView
-        android:id="@+id/img_favorite"
+        android:id="@+id/item3"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:src="@mipmap/ic_no_favorite"
+        android:src="@mipmap/ic_no_favorite_white"
         android:layout_weight="1"
         android:layout_width="0dp"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="visible" />
     <ImageView
-        android:id="@+id/img_answer"
+        android:id="@+id/item4"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:src="@mipmap/ic_edit_white"
         android:layout_weight="1"
         android:layout_width="0dp"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="visible"/>
 
 </com.michaldrabik.tapbarmenulib.TapBarMenu>

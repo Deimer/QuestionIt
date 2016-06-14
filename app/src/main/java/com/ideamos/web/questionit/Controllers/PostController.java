@@ -7,6 +7,7 @@ import com.ideamos.web.questionit.Database.DatabaseHelper;
 import com.ideamos.web.questionit.Models.Post;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.util.List;
 
@@ -32,6 +33,25 @@ public class PostController {
             helper = OpenHelperManager.getHelper(contexto, DatabaseHelper.class);
             RuntimeExceptionDao<Post, Integer> postDao = helper.getPostRuntimeDao();
             postDao.createOrUpdate(post);
+        } catch (Exception ex) {
+            res = false;
+            Log.e("PostController(create)", "Error: " + ex.getMessage());
+        }
+        return res;
+    }
+
+    public boolean ifExist(Post post){
+        boolean res = true;
+        try {
+            helper = OpenHelperManager.getHelper(contexto, DatabaseHelper.class);
+            RuntimeExceptionDao<Post, Integer> postDao = helper.getPostRuntimeDao();
+            List<Post> posts = postDao.queryBuilder().where().eq("post_id", post.getPost_id()).query();
+            if(posts.size() == 0){
+                create(post);
+            } else if(posts.size() > 0) {
+                post.setCode(posts.get(0).getCode());
+                update(post);
+            }
         } catch (Exception ex) {
             res = false;
             Log.e("PostController(create)", "Error: " + ex.getMessage());

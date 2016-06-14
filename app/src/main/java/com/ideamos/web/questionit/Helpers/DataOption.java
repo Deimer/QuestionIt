@@ -1,14 +1,12 @@
 package com.ideamos.web.questionit.Helpers;
 
 import android.content.Context;
-
 import com.facebook.login.LoginResult;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ideamos.web.questionit.Models.SocialUser;
 import com.ideamos.web.questionit.Models.User;
 import com.ideamos.web.questionit.R;
-
 import org.json.JSONObject;
 import java.util.ArrayList;
 

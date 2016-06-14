@@ -20,6 +20,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.ideamos.web.questionit.Controllers.UserController;
 import com.ideamos.web.questionit.Helpers.DataOption;
@@ -178,12 +179,17 @@ public class Login extends AppCompatActivity {
             public void success(JsonObject jsonObject, Response response) {
                 boolean success = jsonObject.get("success").getAsBoolean();
                 if (success) {
-                    String token = jsonObject.get("token").getAsString();
-                    User user = new Gson().fromJson(jsonObject.get("user"), User.class);
-                    user.setToken(token);
-                    if(userController.create(user)){
+                    try {
+                        String token = jsonObject.get("token").getAsString();
+                        User user = new Gson().fromJson(jsonObject.get("user"), User.class);
+                        user.setToken(token);
+                        if(userController.create(user)){
+                            dialog.cancelarProgress();
+                            next(user.getState());
+                        }
+                    } catch (JsonIOException jsonEx) {
                         dialog.cancelarProgress();
-                        next(user.getState());
+                        dialog.dialogWarning("Error: ", jsonEx.getMessage());
                     }
                 } else {
                     String message = jsonObject.get("message").getAsString();

@@ -1,6 +1,7 @@
 package com.ideamos.web.questionit.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.ideamos.web.questionit.Controllers.PostController;
 import com.ideamos.web.questionit.Models.Post;
 import com.ideamos.web.questionit.R;
+import com.ideamos.web.questionit.views.DetailPost;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,16 +76,17 @@ public class Recycler extends RecyclerView.Adapter<Recycler.AdapterView> {
             if (v.getId() == R.id.img_avatar_author) {
                 System.out.println("Click next: " + position);
             } else if((v.getId() == R.id.card_post)) {
-                System.out.println("Click delete: " + position);
+                //System.out.println("Click delete: " + position);
+                next(position);
             }
         }
     }
 
-    //public void next(int position){
-        //Intent intent = new Intent(context, EstateDetail.class);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //intent.putExtra("id", posts.get(position).getPost_id());
-        //context.startActivity(intent);
-    //}
+    public void next(int position){
+        Intent intent = new Intent(context, DetailPost.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("code", posts.get(position).getCode());
+        context.startActivity(intent);
+    }
 
 }

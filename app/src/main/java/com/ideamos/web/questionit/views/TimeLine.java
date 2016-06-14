@@ -131,7 +131,7 @@ public class TimeLine extends AppCompatActivity {
             for (int i = 0; i < array.size(); i++) {
                 JsonObject json = array.get(i).getAsJsonObject();
                 Post post = new Gson().fromJson(json, Post.class);
-                if(!postController.create(post)){
+                if(!postController.ifExist(post)){
                     Log.e(
                             "Timeline(savePosts)",
                             "Error save: Error al guardar post en la iteración " + i
