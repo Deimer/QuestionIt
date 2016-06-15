@@ -23,6 +23,13 @@ public interface Service {
     );
 
     @FormUrlEncoded
+    @POST("/api/logout")
+    void logout(
+            @Query("token") String token,
+            Callback<JsonObject> cb
+    );
+
+    @FormUrlEncoded
     @POST("/api/social/login")
     void socialLogin(
             @Field("provider") String provider,

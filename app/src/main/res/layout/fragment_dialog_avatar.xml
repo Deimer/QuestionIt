@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.percent.PercentRelativeLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/transparent"
     android:gravity="center"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="290dp"
+    android:layout_height="400dp">
 
     <TextView
         android:id="@+id/lbl_name_user"
-        app:layout_widthPercent="90%"
-        app:layout_heightPercent="10%"
         android:elevation="4dp"
         android:padding="8dp"
         android:gravity="center|left"
@@ -18,26 +15,22 @@
         android:text="@string/update_first_name"
         android:textSize="18sp"
         android:textColor="@color/icons"
-        android:layout_width="0dp"
-        android:layout_height="0dp" />
+        android:layout_width="290dp"
+        android:layout_height="wrap_content" />
     <ImageView
         android:id="@+id/img_avatar_user"
         android:contentDescription="@string/app_title"
         android:src="@drawable/com_facebook_profile_picture_blank_square"
         android:scaleType="centerCrop"
-        app:layout_heightPercent="60%"
-        app:layout_widthPercent="90%"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content" />
+        android:layout_width="290dp"
+        android:layout_height="360dp" />
     <LinearLayout
-        app:layout_heightPercent="12%"
-        app:layout_widthPercent="90%"
         android:gravity="center"
         android:background="@color/colorAccent"
         android:layout_below="@+id/img_avatar_user"
         android:orientation="horizontal"
-        android:layout_width="0dp"
-        android:layout_height="0dp">
+        android:layout_width="290dp"
+        android:layout_height="40dp">
         <ImageView
             android:id="@+id/img_question"
             android:contentDescription="@string/app_name"
@@ -56,4 +49,4 @@
             android:layout_height="50dp" />
     </LinearLayout>
 
-</android.support.percent.PercentRelativeLayout>
+</RelativeLayout>

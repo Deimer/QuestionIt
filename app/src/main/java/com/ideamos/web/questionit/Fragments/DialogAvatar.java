@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,7 +42,7 @@ public class DialogAvatar extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int style = DialogFragment.STYLE_NO_FRAME, theme = 0;
+        int style = DialogFragment.STYLE_NORMAL, theme = 0;
         setStyle(style, theme);
         id = getArguments().getInt("id");
         postController = new PostController(getActivity());
@@ -53,6 +54,7 @@ public class DialogAvatar extends DialogFragment {
         final View v = inflater.inflate(R.layout.fragment_dialog_avatar, container, false);
         ButterKnife.bind(this, v);
         loadDatauser();
+        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         return v;
     }
 

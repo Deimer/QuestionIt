@@ -5,8 +5,8 @@
     <string name="title_activity_login">Login</string>
 
     <!-- Cadenas de conexion api -->
-    <string name="url_con">http://192.168.1.3:80</string>
-    <string name="url_test">http://192.168.1.3:80</string>
+    <string name="url_con">http://192.168.0.186:80</string>
+    <string name="url_test">http://192.168.0.186:80</string>
     <!-- Cadena conexion facebook -->
     <string name="facebook_app_id">1643742285950373</string>
     <string name="provider_social">facebook</string>
@@ -34,9 +34,27 @@
     <string name="update_last_name">Apellidos</string>
     <string name="update_date_birth">Fecha de nacimiento</string>
 
-    <string name="action_settings">Settings</string>
+    <!-- Pantalla de navegación -->
+    <string name="user_full_name">Nombre completo</string>
+    <string name="user_emai_nave">deimer215@gmail.com</string>
+
+    <!-- Opciones menu navegación -->
+    <string name="action_home">Mi Perfil</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="action_logout">Cerrar Sesión</string>
+    <string name="action_about">Quienes Somos</string>
+    <string name="action_comments">Comentarios y Sugerencias</string>
+
+    <!-- Pantalla de timeline -->
     <string name="title_activity_time_line">TimeLine</string>
-    <string name="texto">Si éste XML es usado como el layout de una Activity, con los campos delTextView establecidos a valores significativos, entonces así es cómo se renderizaría en un dispositivo Android</string>
+    <string name="texto">Si éste XML es usado como el layout de una Activity, con los campos
+        delTextView establecidos a valores significativos, entonces así es cómo se renderizaría
+        en un dispositivo Android</string>
     <string name="post_username">Username</string>
     <string name="title_activity_post">Post</string>
+    <string name="title_activity_navigation">Navigation</string>
+
+    <!-- Navigation drawer -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

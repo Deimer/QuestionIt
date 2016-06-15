@@ -2,12 +2,17 @@ package com.ideamos.web.questionit.views;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -30,14 +35,18 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class TimeLine extends AppCompatActivity {
+public class TimeLine extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener{
 
     //Variables de entorno y soporte
     private Context context;
     private PostController postController;
+    private UserController userController;
     private SweetDialog dialog;
 
     //Elementos de la vista
+    @Bind(R.id.nav_view)NavigationView nav_view;
+    @Bind(R.id.drawer_layout)DrawerLayout drawer_layout;
     @Bind(R.id.toolbar)Toolbar toolbar;
     @Bind(R.id.recycler)RecyclerView recycler;
 
@@ -58,9 +67,50 @@ public class TimeLine extends AppCompatActivity {
     public void setupContext(){
         context = this;
         postController = new PostController(context);
+        userController = new UserController(context);
         dialog = new SweetDialog(context);
         setupToolbar();
+        setupNavigation();
         getPosts();
+    }
+
+    public void setupNavigation(){
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer_layout, toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close
+        );
+        drawer_layout.addDrawerListener(toggle);
+        toggle.syncState();
+        nav_view.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+            drawer_layout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_home) {
+            System.out.println("Home");
+        } else if (id == R.id.action_settings) {
+            System.out.println("Settings");
+        } else if (id == R.id.action_logout) {
+            logout();
+        } else if (id == R.id.action_about) {
+            System.out.println("About");
+        } else if (id == R.id.action_comments) {
+            System.out.println("Comments");
+        }
+        drawer_layout.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     public void setupToolbar(){
@@ -92,7 +142,6 @@ public class TimeLine extends AppCompatActivity {
     public void getPosts(){
         //dialog.dialogProgress("Obteniendo posts...");
         final String url = getString(R.string.url_test);
-        final UserController userController = new UserController(context);
         String token = userController.show(context).getToken();
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
@@ -114,9 +163,8 @@ public class TimeLine extends AppCompatActivity {
             }
             @Override
             public void failure(RetrofitError error) {
-                //dialog.cancelarProgress();
                 try {
-                    dialog.dialogError("Error", "Se ha producido un error durante el proceso, intentarlo más tarde.");
+                    Log.e("Error", "Se ha producido un error durante el proceso, intentarlo más tarde.");
                     Log.e("Timeline(getPosts)", "Error: " + error.getBody().toString());
                 } catch (Exception ex) {
                     Log.e("Timeline(getPosts)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
@@ -145,6 +193,28 @@ public class TimeLine extends AppCompatActivity {
             Log.e("Timeline(savePosts)", "Error ex: " + ex.getMessage());
         }
         return res;
+    }
+
+    //Seccion para cerrar la sesion y borrado de datos de la aplicacion
+    public void logout(){
+        dialog.dialogProgress("Cerrando sesión...");
+        final String url = getString(R.string.url_test);
+        String token = userController.show(context).getToken();
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setEndpoint(url)
+                .build();
+        Service api = restAdapter.create(Service.class);
+        api.logout(token, new Callback<JsonObject>() {
+            @Override
+            public void success(JsonObject jsonObject, Response response) {
+
+            }
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
     }
 
 }
