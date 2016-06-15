@@ -17,12 +17,12 @@ import java.util.List;
 public class PostController {
 
     private DatabaseHelper helper;
-    private Context contexto;
+    private Context context;
 
     public void postController(){}
 
     public PostController(Context contexto){
-        this.contexto = contexto;
+        this.context = contexto;
         postController();
     }
 
@@ -30,7 +30,7 @@ public class PostController {
     public boolean create(Post post){
         boolean res = true;
         try {
-            helper = OpenHelperManager.getHelper(contexto, DatabaseHelper.class);
+            helper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
             RuntimeExceptionDao<Post, Integer> postDao = helper.getPostRuntimeDao();
             postDao.createOrUpdate(post);
         } catch (Exception ex) {
@@ -43,7 +43,7 @@ public class PostController {
     public boolean ifExist(Post post){
         boolean res = true;
         try {
-            helper = OpenHelperManager.getHelper(contexto, DatabaseHelper.class);
+            helper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
             RuntimeExceptionDao<Post, Integer> postDao = helper.getPostRuntimeDao();
             List<Post> posts = postDao.queryBuilder().where().eq("post_id", post.getPost_id()).query();
             if(posts.size() == 0){
@@ -63,7 +63,7 @@ public class PostController {
     public boolean update(Post post){
         boolean res = true;
         try {
-            helper = OpenHelperManager.getHelper(contexto,DatabaseHelper.class);
+            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
             RuntimeExceptionDao<Post, Integer> postDao = helper.getPostRuntimeDao();
             postDao.update(post);
         } catch (Exception ex) {
@@ -74,7 +74,7 @@ public class PostController {
     }
 
     //Funcion que permite mostrar toda la informacion de un post del usuario
-    public Post show(Context context, int id){
+    public Post show(int id){
         Post post;
         try {
             helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
@@ -104,7 +104,7 @@ public class PostController {
     public boolean delete(Post post){
         boolean res = true;
         try {
-            helper = OpenHelperManager.getHelper(contexto,DatabaseHelper.class);
+            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
             RuntimeExceptionDao<Post, Integer> postDao = helper.getPostRuntimeDao();
             postDao.delete(post);
         } catch (Exception ex) {

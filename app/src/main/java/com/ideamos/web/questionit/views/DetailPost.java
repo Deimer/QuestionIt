@@ -79,7 +79,7 @@ public class DetailPost extends AppCompatActivity {
     }
 
     public void loadInfoPost(int code){
-        Post post = postController.show(context, code);
+        Post post = postController.show(code);
         loadAvtarProfile(post.getAvatar());
         lbl_fullname_user.setText(post.getFull_name());
         lbl_username_author.setText(post.getUsername());

@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.ideamos.web.questionit.Controllers.PostController;
 import com.ideamos.web.questionit.Fragments.DialogAvatar;
 import com.ideamos.web.questionit.Models.Post;
 import com.ideamos.web.questionit.R;
@@ -29,12 +28,9 @@ public class Recycler extends RecyclerView.Adapter<Recycler.AdapterView> {
 
     private Context context;
     private List<Post> posts = new ArrayList<>();
-    private PostController postController;
-
     public Recycler(Context context, List<Post> posts){
         this.context = context;
         this.posts = posts;
-        postController = new PostController(context);
     }
 
     @Override
@@ -94,8 +90,9 @@ public class Recycler extends RecyclerView.Adapter<Recycler.AdapterView> {
     }
 
     public void avatar(int position){
+        int id = posts.get(position).getCode();
         FragmentManager manager = ((Activity) context).getFragmentManager();
-        DialogAvatar dialogAvatar = new DialogAvatar();
+        DialogAvatar dialogAvatar = DialogAvatar.newInstance(id);
         dialogAvatar.show(manager, "Avatar");
     }
 
