@@ -20,12 +20,15 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
+import com.ideamos.web.questionit.Controllers.CategoryController;
 import com.ideamos.web.questionit.Controllers.UserController;
 import com.ideamos.web.questionit.Helpers.DataOption;
 import com.ideamos.web.questionit.Helpers.SweetDialog;
 import com.ideamos.web.questionit.Helpers.Validate;
+import com.ideamos.web.questionit.Models.Category;
 import com.ideamos.web.questionit.Models.User;
 import com.ideamos.web.questionit.R;
 import com.ideamos.web.questionit.Service.Service;
@@ -44,6 +47,7 @@ public class Login extends AppCompatActivity {
     //Variables de entorno
     private Context context;
     private UserController userController;
+    private CategoryController categoryController;
     private SweetDialog dialog;
     private Validate validate;
     private DataOption data;
@@ -68,6 +72,7 @@ public class Login extends AppCompatActivity {
     public void setupActivity(){
         context = this;
         userController = new UserController(context);
+        categoryController = new CategoryController(context);
         dialog = new SweetDialog(context);
         validate = new Validate(context);
         data = new DataOption();
@@ -184,6 +189,7 @@ public class Login extends AppCompatActivity {
                         User user = new Gson().fromJson(jsonObject.get("user"), User.class);
                         user.setToken(token);
                         if(userController.create(user)){
+                            getCategories();
                             dialog.cancelarProgress();
                             next(user.getState());
                         }
@@ -208,6 +214,35 @@ public class Login extends AppCompatActivity {
                 } catch (Exception ex) {
                     Log.e("Login(socialLogin)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
                 }
+            }
+        });
+    }
+
+    public void getCategories(){
+        final String url = getString(R.string.url_test);
+        String token = userController.show(context).getToken();
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setEndpoint(url)
+                .build();
+        Service api = restAdapter.create(Service.class);
+        api.getCategories(token, new Callback<JsonObject>() {
+            @Override
+            public void success(JsonObject jsonObject, Response response) {
+                boolean success = jsonObject.get("success").getAsBoolean();
+                if (success) {
+                    JsonArray array = jsonObject.get("categories").getAsJsonArray();
+                    for (int i = 0; i < array.size(); i++) {
+                        JsonObject json = array.get(i).getAsJsonObject();
+                        Category category = new Gson().fromJson(json, Category.class);
+                        categoryController.create(category);
+                    }
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
             }
         });
     }

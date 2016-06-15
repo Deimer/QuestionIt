@@ -52,7 +52,7 @@ public class TimeLine extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //setupRecycler();
+        setupRecycler();
     }
 
     public void setupContext(){

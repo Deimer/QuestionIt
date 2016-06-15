@@ -16,6 +16,8 @@ import com.ideamos.web.questionit.Helpers.Validate;
 import com.ideamos.web.questionit.Models.Post;
 import com.ideamos.web.questionit.R;
 import com.michaldrabik.tapbarmenulib.TapBarMenu;
+import com.squareup.picasso.Picasso;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -72,15 +74,25 @@ public class DetailPost extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null){
             int code = bundle.getInt("code");
+            loadInfoPost(code);
         }
     }
 
     public void loadInfoPost(int code){
         Post post = postController.show(context, code);
+        loadAvtarProfile(post.getAvatar());
         lbl_fullname_user.setText(post.getFull_name());
         lbl_username_author.setText(post.getUsername());
         lbl_post_question.setText(post.getDescription());
-        lbl_created_date.setText(parseTime.dayOfWeek(post.getCreated_at()));
+        lbl_created_date.setText(parseTime.toCalendar(post.getCreated_at()));
+    }
+
+    public void loadAvtarProfile(String avatar){
+        Picasso.with(context)
+                .load(avatar)
+                .centerCrop().fit()
+                .error(R.drawable.com_facebook_profile_picture_blank_square)
+                .into(avatar_user);
     }
 
     @OnClick(R.id.tap_bar_menu)

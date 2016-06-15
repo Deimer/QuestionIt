@@ -72,12 +72,16 @@ public interface Service {
             Callback<JsonObject> cb
     );
 
-    @GET("/api/posts/all")
+    @GET("/api/posts/get")
     void getPosts(
             @Query("token") String token,
             Callback<JsonObject> cb
     );
 
-
+    @GET("/api/posts/category/get")
+    void getCategories(
+            @Query("token") String token,
+            Callback<JsonObject> cb
+    );
 
 }
