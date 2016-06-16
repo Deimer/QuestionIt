@@ -100,6 +100,7 @@ public class TimeLine extends AppCompatActivity
         drawer_layout.addDrawerListener(toggle);
         toggle.syncState();
         nav_view.setNavigationItemSelectedListener(this);
+        nav_view.setSelected(true);
         View header = nav_view.getHeaderView(0);
         profile_user = (CircleImageView) header.findViewById(R.id.profile_user);
         lbl_fullname_navigation = (TextView) header.findViewById(R.id.lbl_fullname_navigation);
