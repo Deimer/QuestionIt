@@ -28,8 +28,8 @@ public class DialogAvatar extends DialogFragment {
 
     @Bind(R.id.lbl_name_user)TextView lbl_name_user;
     @Bind(R.id.img_avatar_user)ImageView img_avatar_user;
-    @Bind(R.id.img_question)ImageView img_question;
-    @Bind(R.id.img_answer)ImageView img_answer;
+    @Bind(R.id.img_question)ImageView icon_question;
+    @Bind(R.id.img_answer)ImageView icon_answer;
 
     public static DialogAvatar newInstance(int id){
         DialogAvatar dAvatar = new DialogAvatar();

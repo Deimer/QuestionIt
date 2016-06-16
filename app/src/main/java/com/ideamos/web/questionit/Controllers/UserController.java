@@ -98,11 +98,12 @@ public class UserController {
     }
 
     //Funcion que permite reiniciar la base de datos al cerrar una sesion del usuario
-    public boolean logout(int id){
+    public boolean logout(){
         boolean res = true;
         try {
             helper = OpenHelperManager.getHelper(contexto,DatabaseHelper.class);
             RuntimeExceptionDao<User, Integer> usuarioDao = helper.getUsuarioRuntimeDao();
+            int id = show(contexto).getCode();
             usuarioDao.deleteById(id);
             helper.onResetDataBase();
         }catch (Exception ex){

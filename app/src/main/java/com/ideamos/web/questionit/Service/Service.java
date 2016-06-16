@@ -22,8 +22,7 @@ public interface Service {
             Callback<JsonObject> cb
     );
 
-    @FormUrlEncoded
-    @POST("/api/logout")
+    @GET("/api/logout")
     void logout(
             @Query("token") String token,
             Callback<JsonObject> cb

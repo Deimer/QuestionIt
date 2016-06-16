@@ -2,9 +2,11 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@mipmap/background_drawer"
     android:layout_width="match_parent"
-    android:layout_height="190dp">
+    android:layout_height="190dp"
+    tools:context=".views.TimeLine">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_user"
@@ -42,7 +44,6 @@
         android:textColor="@color/icons"
         android:layout_alignParentBottom="true"
         android:layout_alignLeft="@id/lbl_fullname_navigation"
-        android:layout_alignStart="@id/lbl_fullname_navigation"
-        />
+        android:layout_alignStart="@id/lbl_fullname_navigation"/>
 
 </RelativeLayout>

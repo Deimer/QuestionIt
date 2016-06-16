@@ -5,6 +5,8 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.Toast;
 
+import com.github.johnpersano.supertoasts.SuperToast;
+
 /**
  * Creado por Ideamosweb on 2/06/2016.
  */
@@ -33,6 +35,14 @@ public class ToastCustomer {
         Snackbar.make(
                 view, message, Snackbar.LENGTH_LONG
         ).show();
+    }
+
+    public void toastExit(String message){
+        SuperToast superToast = new SuperToast(contexto);
+        superToast.setDuration(SuperToast.Duration.LONG);
+        superToast.setText(message);
+        superToast.setIcon(SuperToast.Icon.Dark.INFO, SuperToast.IconPosition.LEFT);
+        superToast.show();
     }
 
 }
