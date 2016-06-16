@@ -246,10 +246,10 @@ public class TimeLine extends AppCompatActivity
             public void success(JsonObject jsonObject, Response response) {
                 boolean success = jsonObject.get("success").getAsBoolean();
                 if (success) {
+                    logoutSocial();
                     String message = jsonObject.get("message").getAsString();
                     if(userController.logout()){
                         dialog.cancelarProgress();
-                        logoutSocial();
                         exit(message);
                     }
                 } else {
@@ -307,7 +307,9 @@ public class TimeLine extends AppCompatActivity
 
     public void logoutSocial(){
         try {
-            LoginManager.getInstance().logOut();
+            if(userController.show(context).getSocial()){
+                LoginManager.getInstance().logOut();
+            }
         } catch (FacebookException ex) {
             Log.e("Error: ", ex.getMessage());
         }

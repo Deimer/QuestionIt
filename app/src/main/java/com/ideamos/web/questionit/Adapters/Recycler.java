@@ -43,7 +43,7 @@ public class Recycler extends RecyclerView.Adapter<Recycler.AdapterView> {
     public void onBindViewHolder(final AdapterView holder, int position) {
         String avatar = posts.get(position).getAvatar();
         String username = posts.get(position).getUsername();
-        String description = posts.get(position).getDescription();
+        String description = posts.get(position).getQuestion();
         Picasso.with(context).load(avatar)
                 .centerCrop().fit()
                 .placeholder(R.drawable.com_facebook_profile_picture_blank_square)

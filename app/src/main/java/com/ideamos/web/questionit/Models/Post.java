@@ -19,7 +19,7 @@ public class Post {
     @DatabaseField(canBeNull = false)
     private int post_id;
     @DatabaseField(canBeNull = false)
-    private String description;
+    private String question;
     @DatabaseField(canBeNull = false)
     private String username;
     @DatabaseField(canBeNull = false)
@@ -35,10 +35,10 @@ public class Post {
 
     public Post() {}
 
-    public Post(int post_id, String description, String username, String full_name,
+    public Post(int post_id, String question, String username, String full_name,
                 String avatar, String created_at, int category_id, boolean active) {
         this.post_id = post_id;
-        this.description = description;
+        this.question = question;
         this.username = username;
         this.full_name = full_name;
         this.avatar = avatar;
@@ -54,8 +54,8 @@ public class Post {
     public int getPost_id() {
         return post_id;
     }
-    public String getDescription() {
-        return description;
+    public String getQuestion() {
+        return question;
     }
     public String getUsername() {
         return username;
@@ -84,8 +84,8 @@ public class Post {
     public void setPost_id(int post_id) {
         this.post_id = post_id;
     }
-    public void setDescription(String description) {
-        this.description = description;
+    public void setQuestion(String question) {
+        this.question = question;
     }
     public void setUsername(String username) {
         this.username = username;
@@ -112,7 +112,7 @@ public class Post {
         return "Post{" +
             "code=" + code +
             ", post_id=" + post_id +
-            ", description='" + description + '\'' +
+            ", description='" + question + '\'' +
             ", username='" + username + '\'' +
             ", full_name='" + full_name + '\'' +
             ", avatar='" + avatar + '\'' +

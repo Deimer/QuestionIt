@@ -83,7 +83,7 @@ public class DetailPost extends AppCompatActivity {
         loadAvtarProfile(post.getAvatar());
         lbl_fullname_user.setText(post.getFull_name());
         lbl_username_author.setText(post.getUsername());
-        lbl_post_question.setText(post.getDescription());
+        lbl_post_question.setText(post.getQuestion());
         lbl_created_date.setText(parseTime.toCalendar(post.getCreated_at()));
     }
 

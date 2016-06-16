@@ -29,6 +29,7 @@ import com.ideamos.web.questionit.Helpers.DataOption;
 import com.ideamos.web.questionit.Helpers.SweetDialog;
 import com.ideamos.web.questionit.Helpers.Validate;
 import com.ideamos.web.questionit.Models.Category;
+import com.ideamos.web.questionit.Models.SocialUser;
 import com.ideamos.web.questionit.Models.User;
 import com.ideamos.web.questionit.R;
 import com.ideamos.web.questionit.Service.Service;
@@ -171,7 +172,7 @@ public class Login extends AppCompatActivity {
         });
     }
 
-    public void socialLogin(String provider, String id_provider, String email, String avatar){
+    public void socialLogin(SocialUser social, String email){
         dialog.dialogProgress("Iniciando sesión...");
         final String url = getString(R.string.url_test);
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -179,7 +180,7 @@ public class Login extends AppCompatActivity {
                 .setEndpoint(url)
                 .build();
         Service api = restAdapter.create(Service.class);
-        api.socialLogin(provider, id_provider, email, avatar, new Callback<JsonObject>() {
+        api.socialLogin(social.getProvider(), social.getId_provider(), email, social.getAvatar(), new Callback<JsonObject>() {
             @Override
             public void success(JsonObject jsonObject, Response response) {
                 boolean success = jsonObject.get("success").getAsBoolean();
@@ -239,10 +240,14 @@ public class Login extends AppCompatActivity {
                     }
                 }
             }
-
             @Override
             public void failure(RetrofitError error) {
-
+                try {
+                    Log.e("Error", "Se ha producido un error durante el proceso, intentarlo más tarde.");
+                    Log.e("Login(socialLogin)", "Error: " + error.getBody().toString());
+                } catch (Exception ex) {
+                    Log.e("Login(socialLogin)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
+                }
             }
         });
     }
@@ -286,19 +291,23 @@ public class Login extends AppCompatActivity {
                                 @Override
                                 public void onCompleted(JSONObject object, GraphResponse response) {
                                     JsonObject json = data.convertToJsonGson(object);
-                                    String provider = getString(R.string.provider_social);
-                                    String id_provider = json.get("id").getAsString();
+                                    SocialUser social = new SocialUser();
+                                    social.setFull_name(json.get("name").getAsString());
+                                    social.setUsername(data.formatUsername(json.get("email").getAsString()));
+                                    social.setProvider(getString(R.string.provider_social));
+                                    social.setId_provider(json.get("id").getAsString());
+                                    social.setSocial_token(loginResult.getAccessToken().getToken());
                                     String email_social = json.get("email").getAsString();
-                                    String avatar = json
+                                    social.setAvatar(json
                                             .get("picture").getAsJsonObject()
                                             .get("data").getAsJsonObject()
-                                            .get("url").getAsString();
-                                    socialLogin(provider, id_provider, email_social, avatar);
+                                            .get("url").getAsString());
+                                    socialLogin(social, email_social);
                                 }
                             }
                     );
                     Bundle parameters = new Bundle();
-                    parameters.putString("fields", "id,email,picture.type(large)");
+                    parameters.putString("fields", "id,name,email,picture.type(large)");
                     request.setParameters(parameters);
                     request.executeAsync();
                 }
