@@ -1,5 +1,6 @@
 package com.ideamos.web.questionit.Service;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import retrofit.Callback;
 import retrofit.http.Field;
@@ -87,6 +88,15 @@ public interface Service {
     @GET("/api/posts/category/get")
     void getCategories(
             @Query("token") String token,
+            Callback<JsonObject> cb
+    );
+
+//Pruebas
+
+    @FormUrlEncoded
+    @POST("/api/posts/try")
+    void array(
+            @Field("answers")String anwers,
             Callback<JsonObject> cb
     );
 
