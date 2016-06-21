@@ -17,30 +17,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 import com.ideamos.web.questionit.Controllers.UserController;
-import com.ideamos.web.questionit.Models.Try;
 import com.ideamos.web.questionit.R;
-import com.ideamos.web.questionit.Service.Service;
 import com.vstechlab.easyfonts.EasyFonts;
-
-import org.json.JSONArray;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class Welcome extends AppCompatActivity {
 
@@ -66,7 +49,6 @@ public class Welcome extends AppCompatActivity {
         context = this;
         userController = new UserController(context);
         initInstanceFacebook();
-        sendObjets();
         setupLogo();
         moveLogo();
         setupTitle();
@@ -171,50 +153,50 @@ public class Welcome extends AppCompatActivity {
         }
     }
 
-    public String getObjets(){
-        List<Try> list = new ArrayList<>();
-        Try try1 = new Try("Descripcion 1", true, 1, 1);
-        Try try2 = new Try("Descripcion 2", false, 2, 1);
-        Try try3 = new Try("Descripcion 3", true, 3, 1);
-        Try try4 = new Try("Descripcion 4", false, 4, 1);
-        list.add(try1);
-        list.add(try2);
-        list.add(try3);
-        list.add(try4);
-        Gson gson = new Gson();
-        String json = gson.toJson(list);
-        System.out.println(json);
-        return json;
-    }
-
-    public void sendObjets(){
-        final String url = getString(R.string.url_test);
-        String list = getObjets();
-        System.out.println(list);
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setEndpoint(url)
-                .build();
-        Service api = restAdapter.create(Service.class);
-        api.array(list, new Callback<JsonObject>() {
-            @Override
-            public void success(JsonObject jsonObject, Response response) {
-                boolean success = jsonObject.get("success").getAsBoolean();
-                if(success){
-                    String message = jsonObject.get("message").getAsString();
-                    System.out.println(message);
-                }
-            }
-            @Override
-            public void failure(RetrofitError error) {
-                try {
-                    Log.e("Error", "Se ha producido un error durante el proceso, intentarlo más tarde.");
-                    Log.e("Update(update)", "Error: " + error.getBody().toString());
-                } catch (Exception ex) {
-                    Log.e("Update(update)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
-                }
-            }
-        });
-    }
+    //public String getObjets(){
+    //    List<Try> list = new ArrayList<>();
+    //    Try try1 = new Try("Descripcion 1", true, 1, 1);
+    //    Try try2 = new Try("Descripcion 2", false, 2, 1);
+    //    Try try3 = new Try("Descripcion 3", true, 3, 1);
+    //    Try try4 = new Try("Descripcion 4", false, 4, 1);
+    //    list.add(try1);
+    //    list.add(try2);
+    //    list.add(try3);
+    //    list.add(try4);
+    //    Gson gson = new Gson();
+    //    String json = gson.toJson(list);
+    //    System.out.println(json);
+    //    return json;
+    //}
+//
+    //public void sendObjets(){
+    //    final String url = getString(R.string.url_test);
+    //    String list = getObjets();
+    //    System.out.println(list);
+    //    RestAdapter restAdapter = new RestAdapter.Builder()
+    //            .setLogLevel(RestAdapter.LogLevel.FULL)
+    //            .setEndpoint(url)
+    //            .build();
+    //    Service api = restAdapter.create(Service.class);
+    //    api.array(list, new Callback<JsonObject>() {
+    //        @Override
+    //        public void success(JsonObject jsonObject, Response response) {
+    //            boolean success = jsonObject.get("success").getAsBoolean();
+    //            if(success){
+    //                String message = jsonObject.get("message").getAsString();
+    //                System.out.println(message);
+    //            }
+    //        }
+    //        @Override
+    //        public void failure(RetrofitError error) {
+    //            try {
+    //                Log.e("Error", "Se ha producido un error durante el proceso, intentarlo más tarde.");
+    //                Log.e("Update(update)", "Error: " + error.getBody().toString());
+    //            } catch (Exception ex) {
+    //                Log.e("Update(update)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
+    //            }
+    //        }
+    //    });
+    //}
 
 }

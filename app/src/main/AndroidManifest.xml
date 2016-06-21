@@ -74,6 +74,29 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <!-- Pantalla detalle del post -->
+        <activity
+            android:name=".views.DetailPost"
+            android:label="@string/title_activity_post"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- Fragments -->
+        <activity
+            android:name=".views.MyProfile"
+            android:label="@string/title_activity_my_profile"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".views.Setting"
+            android:label="@string/title_activity_setting"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <!-- Meta data para facebook -->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -85,16 +108,8 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name=".views.DetailPost"
-            android:label="@string/title_activity_post"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".views.MyProfile"
-            android:label="@string/title_activity_my_profile"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".views.Setting"
-            android:label="@string/title_activity_setting"
+            android:name=".views.CreatePost"
+            android:label="@string/title_activity_create_post"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
