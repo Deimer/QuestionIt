@@ -13,12 +13,12 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 public class SocialController {
 
     private DatabaseHelper helper;
-    private Context contexto;
+    private Context context;
 
     public void socialController(){}
 
-    public SocialController(Context contexto){
-        this.contexto = contexto;
+    public SocialController(Context context){
+        this.context = context;
         socialController();
     }
 
@@ -26,7 +26,7 @@ public class SocialController {
     public boolean create(SocialUser social){
         boolean res = true;
         try {
-            helper = OpenHelperManager.getHelper(contexto, DatabaseHelper.class);
+            helper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
             RuntimeExceptionDao<SocialUser, Integer> socialDao = helper.getSocialRuntimeDao();
             socialDao.create(social);
         } catch (Exception ex) {
@@ -40,7 +40,7 @@ public class SocialController {
     public boolean update(SocialUser social){
         boolean res = true;
         try {
-            helper = OpenHelperManager.getHelper(contexto,DatabaseHelper.class);
+            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
             RuntimeExceptionDao<SocialUser, Integer> socialDao = helper.getSocialRuntimeDao();
             socialDao.update(social);
         } catch (Exception ex) {
@@ -51,7 +51,7 @@ public class SocialController {
     }
 
     //Funcion que permite mostrar toda la informacion del usuario logueado
-    public SocialUser show(Context context){
+    public SocialUser show(){
         SocialUser social;
         try {
             helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
@@ -68,7 +68,7 @@ public class SocialController {
     public boolean delete(SocialUser social){
         boolean res = true;
         try {
-            helper = OpenHelperManager.getHelper(contexto,DatabaseHelper.class);
+            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
             RuntimeExceptionDao<SocialUser, Integer> socialDao = helper.getSocialRuntimeDao();
             socialDao.delete(social);
         } catch (Exception ex) {
@@ -82,7 +82,7 @@ public class SocialController {
     public boolean session(){
         boolean res = false;
         try {
-            helper = OpenHelperManager.getHelper(contexto,DatabaseHelper.class);
+            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
             RuntimeExceptionDao<SocialUser, Integer> socialDao = helper.getSocialRuntimeDao();
             int cantidad = (int)socialDao.countOf();
             if(cantidad > 0){
@@ -98,7 +98,7 @@ public class SocialController {
     public boolean logout(int id){
         boolean res = true;
         try {
-            helper = OpenHelperManager.getHelper(contexto,DatabaseHelper.class);
+            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
             RuntimeExceptionDao<SocialUser, Integer> socialDao = helper.getSocialRuntimeDao();
             socialDao.deleteById(id);
             helper.onResetDataBase();

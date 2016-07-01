@@ -21,11 +21,16 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.ideamos.web.questionit.Controllers.AnswerController;
+import com.ideamos.web.questionit.Controllers.CategoryController;
 import com.ideamos.web.questionit.Controllers.UserController;
 import com.ideamos.web.questionit.Helpers.DataOption;
 import com.ideamos.web.questionit.Helpers.SweetDialog;
 import com.ideamos.web.questionit.Helpers.Validate;
+import com.ideamos.web.questionit.Models.AnswerType;
+import com.ideamos.web.questionit.Models.Category;
 import com.ideamos.web.questionit.Models.SocialUser;
 import com.ideamos.web.questionit.Models.User;
 import com.ideamos.web.questionit.R;
@@ -46,6 +51,8 @@ public class Register extends Activity {
     //Variables de entorno
     private Context context;
     private UserController userController;
+    private CategoryController categoryController;
+    private AnswerController answerController;
     private Validate validate;
     private SweetDialog dialog;
     private CallbackManager callbackManager;
@@ -71,6 +78,8 @@ public class Register extends Activity {
     public void setupActivity(){
         context = this;
         userController = new UserController(context);
+        categoryController = new CategoryController(context);
+        answerController = new AnswerController(context);
         validate = new Validate(context);
         dialog = new SweetDialog(context);
         data = new DataOption();
@@ -88,7 +97,7 @@ public class Register extends Activity {
 
     public void register(String username, final String email, String password){
         dialog.dialogProgress("Registrando...");
-        final String url = getString(R.string.url_test);
+        final String url = getString(R.string.url_con);
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(url)
@@ -120,7 +129,7 @@ public class Register extends Activity {
 
     public void socialRegister(User user, SocialUser social){
         dialog.dialogProgress("Registrando...");
-        final String url = getString(R.string.url_test);
+        final String url = getString(R.string.url_con);
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(url)
@@ -143,6 +152,8 @@ public class Register extends Activity {
                             User user = new Gson().fromJson(jsonObject.get("user"), User.class);
                             user.setToken(token);
                             if(userController.create(user)){
+                                getCategories(token);
+                                getAnswerTypes(token);
                                 dialog.cancelarProgress();
                                 String title = "¡Registrado!";
                                 dialogRegister(title, message, "", true);
@@ -160,12 +171,76 @@ public class Register extends Activity {
                         dialog.cancelarProgress();
                         try {
                             dialog.dialogError("Error", "Se ha producido un error durante el proceso, intentarlo más tarde.");
-                            Log.e("Login(socialLogin)", "Error: " + error.getBody().toString());
+                            Log.e("Register(socialRegister)", "Error: " + error.getBody().toString());
                         } catch (Exception ex) {
-                            Log.e("Login(socialLogin)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
+                            Log.e("Register(socialRegister)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
                         }
                     }
                 });
+    }
+
+    public void getCategories(String token){
+        final String url = getString(R.string.url_con);
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setEndpoint(url)
+                .build();
+        Service api = restAdapter.create(Service.class);
+        api.getCategories(token, new Callback<JsonObject>() {
+            @Override
+            public void success(JsonObject jsonObject, Response response) {
+                boolean success = jsonObject.get("success").getAsBoolean();
+                if (success) {
+                    JsonArray array = jsonObject.get("categories").getAsJsonArray();
+                    for (int i = 0; i < array.size(); i++) {
+                        JsonObject json = array.get(i).getAsJsonObject();
+                        Category category = new Gson().fromJson(json, Category.class);
+                        categoryController.create(category);
+                    }
+                }
+            }
+            @Override
+            public void failure(RetrofitError error) {
+                try {
+                    Log.e("Error", "Se ha producido un error durante el proceso, intentarlo más tarde.");
+                    Log.e("Login(socialLogin)", "Error: " + error.getBody().toString());
+                } catch (Exception ex) {
+                    Log.e("Login(socialLogin)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
+                }
+            }
+        });
+    }
+
+    public void getAnswerTypes(String token){
+        final String url = getString(R.string.url_con);
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setEndpoint(url)
+                .build();
+        Service api = restAdapter.create(Service.class);
+        api.getAnswerTypes(token, new Callback<JsonObject>() {
+            @Override
+            public void success(JsonObject jsonObject, Response response) {
+                boolean success = jsonObject.get("success").getAsBoolean();
+                if (success) {
+                    JsonArray array = jsonObject.get("answer_types").getAsJsonArray();
+                    for (int i = 0; i < array.size(); i++) {
+                        JsonObject json = array.get(i).getAsJsonObject();
+                        AnswerType answerType = new Gson().fromJson(json, AnswerType.class);
+                        answerController.create(answerType);
+                    }
+                }
+            }
+            @Override
+            public void failure(RetrofitError error) {
+                try {
+                    Log.e("Error", "Se ha producido un error durante el proceso, intentarlo más tarde.");
+                    Log.e("Login(getAnswerTypes)", "Error: " + error.getBody().toString());
+                } catch (Exception ex) {
+                    Log.e("Login(getAnswerTypes)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
+                }
+            }
+        });
     }
 
 //Funciones e interacciones con apis sociales
@@ -244,7 +319,7 @@ public class Register extends Activity {
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.dismissWithAnimation();
                         if(social){
-                            Intent timeline = new Intent(Register.this, TimeLine.class);
+                            Intent timeline = new Intent(Register.this, Timeline.class);
                             startActivity(timeline);
                         } else {
                             Intent login = new Intent(Register.this, Login.class);

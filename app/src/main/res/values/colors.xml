@@ -7,6 +7,7 @@
     <color name="colorTransparent">#00ffffff</color>
     <color name="colorPressed">#ffdfdf</color>
     <color name="colorAccent">#7B1FA2</color>
+    <color name="colorAccentLight">#987b1fa2</color>
     <color name="primary_text">#212121</color>
     <color name="question_text">#282828</color>
     <color name="secondary_text">#727272</color>

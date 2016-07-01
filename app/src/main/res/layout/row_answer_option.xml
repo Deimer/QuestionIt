@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="50dp">
+    <ImageView
+        android:id="@+id/item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:background="@android:color/transparent"
+        android:layout_gravity="center"
+        android:src="@mipmap/ic_checked"/>
+    <EditText
+        android:id="@+id/txt_option"
+        android:layout_marginLeft="8dp"
+        android:paddingLeft="10dp"
+        android:textSize="16sp"
+        android:textColor="@color/primary_text"
+        android:hint="@string/createpost_option"
+        android:textColorHint="@color/secondary_text"
+        android:inputType="textCapSentences"
+        android:singleLine="true"
+        android:maxLength="20"
+        android:layout_width="match_parent"
+        android:layout_height="45dp" />
+</LinearLayout>

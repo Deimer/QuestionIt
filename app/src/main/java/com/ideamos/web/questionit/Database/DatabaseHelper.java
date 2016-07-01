@@ -5,10 +5,13 @@ import java.sql.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.ideamos.web.questionit.Models.Answer;
+import com.ideamos.web.questionit.Models.AnswerType;
 import com.ideamos.web.questionit.Models.Category;
 import com.ideamos.web.questionit.Models.Post;
 import com.ideamos.web.questionit.Models.SocialUser;
 import com.ideamos.web.questionit.Models.User;
+import com.ideamos.web.questionit.Models.UserAnswer;
 import com.ideamos.web.questionit.R;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
@@ -36,6 +39,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
     private RuntimeExceptionDao<Post, Integer> postRuntimeDao = null;
     private Dao<Category, Integer> categoryDao = null;
     private RuntimeExceptionDao<Category, Integer> categoryRuntimeDao = null;
+    private Dao<Answer, Integer> answerDao = null;
+    private RuntimeExceptionDao<Answer, Integer> answerRuntimeDao = null;
+    private Dao<AnswerType, Integer> answerTypeDao = null;
+    private RuntimeExceptionDao<AnswerType, Integer> answerTypeRuntimeDao = null;
+    private Dao<UserAnswer, Integer> userAnswerDao = null;
+    private RuntimeExceptionDao<UserAnswer, Integer> userAnswerRuntimeDao = null;
 
     /*Funcion que permite crear la base de datos cuando inicia la aplicacion
     * Usa como parametros;
@@ -49,6 +58,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
             TableUtils.createTable(source, SocialUser.class);
             TableUtils.createTable(source, Post.class);
             TableUtils.createTable(source, Category.class);
+            TableUtils.createTable(source, Answer.class);
+            TableUtils.createTable(source, AnswerType.class);
+            TableUtils.createTable(source, UserAnswer.class);
         } catch (SQLException sqlEx) {
             Log.e("DatabaseHelper(onCreate)", "Error: " + sqlEx.getMessage());
             throw new RuntimeException(sqlEx);
@@ -69,6 +81,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
             TableUtils.dropTable(source, SocialUser.class, true);
             TableUtils.dropTable(source, Post.class, true);
             TableUtils.dropTable(source, Category.class, true);
+            TableUtils.dropTable(source, Answer.class, true);
+            TableUtils.dropTable(source, AnswerType.class, true);
+            TableUtils.dropTable(source, UserAnswer.class, true);
             onCreate(db, source);
         } catch (SQLException sqlEx) {
             Log.e("DatabaseHelper(onUpgrade)", "Error: " + sqlEx.getMessage());
@@ -88,11 +103,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
             TableUtils.dropTable(source, SocialUser.class, true);
             TableUtils.dropTable(source, Post.class, true);
             TableUtils.dropTable(source, Category.class, true);
+            TableUtils.dropTable(source, Answer.class, true);
+            TableUtils.dropTable(source, AnswerType.class, true);
+            TableUtils.dropTable(source, UserAnswer.class, true);
             //Recreacion de las tablas
             TableUtils.createTable(source, User.class);
             TableUtils.createTable(source, SocialUser.class);
             TableUtils.createTable(source, Post.class);
             TableUtils.createTable(source, Category.class);
+            TableUtils.createTable(source, Answer.class);
+            TableUtils.createTable(source, AnswerType.class);
+            TableUtils.createTable(source, UserAnswer.class);
         }catch (SQLException sqlEx){
             Log.i("DatabaseHelper(onResetDataBase)", "Error: " + sqlEx.getMessage());
             throw new RuntimeException(sqlEx);
@@ -109,6 +130,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
         postRuntimeDao = null;
         categoryDao = null;
         categoryRuntimeDao = null;
+        answerDao = null;
+        answerRuntimeDao = null;
+        answerTypeDao = null;
+        answerTypeRuntimeDao = null;
+        userAnswerDao = null;
+        userAnswerRuntimeDao = null;
     }
 
     public Dao<User, Integer> getUserDao() throws SQLException {
@@ -145,6 +172,33 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
     public RuntimeExceptionDao<Category, Integer> getCategoryRuntimeDao() {
         if(categoryRuntimeDao == null) categoryRuntimeDao = getRuntimeExceptionDao(Category.class);
         return categoryRuntimeDao;
+    }
+
+    public Dao<Answer, Integer> getAnswerDao() throws SQLException {
+        if(answerDao == null) answerDao = getDao(Answer.class);
+        return answerDao;
+    }
+    public RuntimeExceptionDao<Answer, Integer> getAnswerRuntimeDao() {
+        if(answerRuntimeDao == null) answerRuntimeDao = getRuntimeExceptionDao(Answer.class);
+        return answerRuntimeDao;
+    }
+
+    public Dao<AnswerType, Integer> getAnswerTypeDao() throws SQLException {
+        if(answerTypeDao == null) answerTypeDao = getDao(AnswerType.class);
+        return answerTypeDao;
+    }
+    public RuntimeExceptionDao<AnswerType, Integer> getAnswerTypeRuntimeDao() {
+        if(answerTypeRuntimeDao == null) answerTypeRuntimeDao = getRuntimeExceptionDao(AnswerType.class);
+        return answerTypeRuntimeDao;
+    }
+
+    public Dao<UserAnswer, Integer> getUserAnswerDao() throws SQLException {
+        if(userAnswerDao == null) userAnswerDao = getDao(UserAnswer.class);
+        return userAnswerDao;
+    }
+    public RuntimeExceptionDao<UserAnswer, Integer> getUserAnswerRuntimeDao() {
+        if(userAnswerRuntimeDao == null) userAnswerRuntimeDao = getRuntimeExceptionDao(UserAnswer.class);
+        return userAnswerRuntimeDao;
     }
 
 }

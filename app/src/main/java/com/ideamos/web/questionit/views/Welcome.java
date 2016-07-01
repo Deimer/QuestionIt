@@ -116,7 +116,7 @@ public class Welcome extends AppCompatActivity {
     }
 
     public void openTimeline(){
-        Intent timeline = new Intent(Welcome.this, TimeLine.class);
+        Intent timeline = new Intent(Welcome.this, Timeline.class);
         startActivity(timeline);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
@@ -125,7 +125,7 @@ public class Welcome extends AppCompatActivity {
     public void setupSession(){
         boolean session = userController.session();
         if(session){
-            int state = userController.show(context).getState();
+            int state = userController.show().getState();
             if(state == 2){
                 openUpdate();
             } else if(state == 1){
@@ -152,51 +152,5 @@ public class Welcome extends AppCompatActivity {
             Log.d("Welcome(NoSuchAlgorithmException): ", e.getMessage());
         }
     }
-
-    //public String getObjets(){
-    //    List<Try> list = new ArrayList<>();
-    //    Try try1 = new Try("Descripcion 1", true, 1, 1);
-    //    Try try2 = new Try("Descripcion 2", false, 2, 1);
-    //    Try try3 = new Try("Descripcion 3", true, 3, 1);
-    //    Try try4 = new Try("Descripcion 4", false, 4, 1);
-    //    list.add(try1);
-    //    list.add(try2);
-    //    list.add(try3);
-    //    list.add(try4);
-    //    Gson gson = new Gson();
-    //    String json = gson.toJson(list);
-    //    System.out.println(json);
-    //    return json;
-    //}
-//
-    //public void sendObjets(){
-    //    final String url = getString(R.string.url_test);
-    //    String list = getObjets();
-    //    System.out.println(list);
-    //    RestAdapter restAdapter = new RestAdapter.Builder()
-    //            .setLogLevel(RestAdapter.LogLevel.FULL)
-    //            .setEndpoint(url)
-    //            .build();
-    //    Service api = restAdapter.create(Service.class);
-    //    api.array(list, new Callback<JsonObject>() {
-    //        @Override
-    //        public void success(JsonObject jsonObject, Response response) {
-    //            boolean success = jsonObject.get("success").getAsBoolean();
-    //            if(success){
-    //                String message = jsonObject.get("message").getAsString();
-    //                System.out.println(message);
-    //            }
-    //        }
-    //        @Override
-    //        public void failure(RetrofitError error) {
-    //            try {
-    //                Log.e("Error", "Se ha producido un error durante el proceso, intentarlo más tarde.");
-    //                Log.e("Update(update)", "Error: " + error.getBody().toString());
-    //            } catch (Exception ex) {
-    //                Log.e("Update(update)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
-    //            }
-    //        }
-    //    });
-    //}
 
 }

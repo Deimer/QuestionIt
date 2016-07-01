@@ -5,8 +5,7 @@
     <string name="title_activity_login">Login</string>
 
     <!-- Cadenas de conexion api -->
-    <string name="url_con">http://192.168.1.5:80</string>
-    <string name="url_test">http://192.168.1.5:80</string>
+    <string name="url_con">http://192.168.0.197:80</string>
     <!-- Cadena conexion facebook -->
     <string name="facebook_app_id">1643742285950373</string>
     <string name="provider_social">facebook</string>
@@ -59,6 +58,22 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_my_profile">MyProfile</string>
+
+    <!-- Pantalla creacion de un post -->
+    <string name="createpost_categories">Categorías</string>
+    <string name="createpost_question">Pregunta</string>
+    <string name="createpost_questions">Escribe tu pregunta…</string>
+    <string name="createpost_answer_type">Tipo de respuesta</string>
+    <string name="createpost_option_answers">Opciones de respuesta</string>
+    <string name="createpost_option">Agrega una opción</string>
+    <string name="createpost_remove">Remover</string>
+    <string name="createpost_add">Agregar</string>
+
+    <!-- Navigation drawer -->
+    <string name="dialog_answer_cancel">Cancelar</string>
+    <string name="dialog_answer_accept">Responder</string>
+
+    <string name="number_bar">0</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

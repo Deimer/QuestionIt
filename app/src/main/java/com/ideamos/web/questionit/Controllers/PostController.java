@@ -21,8 +21,8 @@ public class PostController {
 
     public void postController(){}
 
-    public PostController(Context contexto){
-        this.context = contexto;
+    public PostController(Context context){
+        this.context = context;
         postController();
     }
 
@@ -87,7 +87,7 @@ public class PostController {
         return post;
     }
 
-    public List<Post> list(Context context){
+    public List<Post> list(){
         List<Post> list;
         try {
             helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);

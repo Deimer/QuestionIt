@@ -21,6 +21,14 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="material_button" parent="android:style/Widget.Material.Button">
+        <item name="android:background">@drawable/background_button_material</item>
+    </style>
+
+    <style name="material_button_dark" parent="android:style/Widget.Material.Button">
+        <item name="android:background">@drawable/background_button_material_dark</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

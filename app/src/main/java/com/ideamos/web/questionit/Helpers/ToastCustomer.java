@@ -45,4 +45,12 @@ public class ToastCustomer {
         superToast.show();
     }
 
+    public void toastWarning(String message){
+        SuperToast superToast = new SuperToast(contexto);
+        superToast.setDuration(SuperToast.Duration.LONG);
+        superToast.setText(message);
+        superToast.setIcon(SuperToast.Icon.Dark.EXIT, SuperToast.IconPosition.LEFT);
+        superToast.show();
+    }
+
 }

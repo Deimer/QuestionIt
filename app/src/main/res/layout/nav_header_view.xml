@@ -6,7 +6,7 @@
     android:background="@mipmap/background_drawer"
     android:layout_width="match_parent"
     android:layout_height="190dp"
-    tools:context=".views.TimeLine">
+    tools:context=".views.Timeline">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_user"

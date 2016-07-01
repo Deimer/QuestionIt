@@ -31,12 +31,14 @@ public class Post {
     @DatabaseField(canBeNull = false)
     private int category_id;
     @DatabaseField(canBeNull = false)
+    private int answer_type;
+    @DatabaseField(canBeNull = false)
     private boolean active;
 
     public Post() {}
 
-    public Post(int post_id, String question, String username, String full_name,
-                String avatar, String created_at, int category_id, boolean active) {
+    public Post(int post_id, String question, String username, String full_name, String avatar,
+                String created_at, int category_id, int answer_type, boolean active) {
         this.post_id = post_id;
         this.question = question;
         this.username = username;
@@ -44,10 +46,11 @@ public class Post {
         this.avatar = avatar;
         this.created_at = created_at;
         this.category_id = category_id;
+        this.answer_type = answer_type;
         this.active = active;
     }
 
-    //region Getters
+//region Getters
     public int getCode() {
         return code;
     }
@@ -71,6 +74,9 @@ public class Post {
     }
     public int getCategory_id() {
         return category_id;
+    }
+    public int getAnswer_type() {
+        return answer_type;
     }
     public boolean isActive() {
         return active;
@@ -102,6 +108,9 @@ public class Post {
     public void setCategory_id(int category_id) {
         this.category_id = category_id;
     }
+    public void setAnswer_type(int answer_type) {
+        this.answer_type = answer_type;
+    }
     public void setActive(boolean active) {
         this.active = active;
     }
@@ -112,14 +121,14 @@ public class Post {
         return "Post{" +
             "code=" + code +
             ", post_id=" + post_id +
-            ", description='" + question + '\'' +
+            ", question='" + question + '\'' +
             ", username='" + username + '\'' +
             ", full_name='" + full_name + '\'' +
             ", avatar='" + avatar + '\'' +
             ", created_at='" + created_at + '\'' +
             ", category_id=" + category_id +
+            ", answer_type=" + answer_type +
             ", active=" + active +
         '}';
     }
-
 }

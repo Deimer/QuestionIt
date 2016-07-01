@@ -141,9 +141,9 @@ public class Update extends AppCompatActivity
 
     public void update(final String fname, final String lname, final String bdate){
         dialog.dialogProgress("Actualizando información...");
-        final String url = getString(R.string.url_test);
-        int user_id = userController.show(context).getUser_id();
-        String token = userController.show(context).getToken();
+        final String url = getString(R.string.url_con);
+        int user_id = userController.show().getUser_id();
+        String token = userController.show().getToken();
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(url)
@@ -154,14 +154,17 @@ public class Update extends AppCompatActivity
             public void success(JsonObject jsonObject, Response response) {
                 boolean success = jsonObject.get("success").getAsBoolean();
                 if (success) {
-                    User user = userController.show(context);
+                    User user = userController.show();
                     user.setFirst_name(fname);
                     user.setLast_name(lname);
                     user.setBirth_date(bdate);
                     user.setState(1);
                     if(userController.update(user)){
-                        dialog.cancelarProgress();
-                        next();
+                        String token = jsonObject.get("new_token").getAsString();
+                        if(userController.changeToken(token)) {
+                            dialog.cancelarProgress();
+                            next();
+                        }
                     }
                 } else {
                     String message = jsonObject.get("message").getAsString();
@@ -184,7 +187,7 @@ public class Update extends AppCompatActivity
     }
 
     public void next(){
-        Intent timeLine = new Intent(Update.this, TimeLine.class);
+        Intent timeLine = new Intent(Update.this, Timeline.class);
         startActivity(timeLine);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();

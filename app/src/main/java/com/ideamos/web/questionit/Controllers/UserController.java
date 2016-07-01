@@ -16,12 +16,12 @@ import java.util.List;
 public class UserController {
 
     private DatabaseHelper helper;
-    private Context contexto;
+    private Context context;
 
     public void userController(){}
 
-    public UserController(Context contexto){
-        this.contexto = contexto;
+    public UserController(Context context){
+        this.context = context;
         userController();
     }
 
@@ -29,7 +29,7 @@ public class UserController {
     public boolean create(User user){
         boolean res = true;
         try {
-            helper = OpenHelperManager.getHelper(contexto, DatabaseHelper.class);
+            helper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
             RuntimeExceptionDao<User, Integer> userDao = helper.getUsuarioRuntimeDao();
             userDao.create(user);
         } catch (Exception ex) {
@@ -43,7 +43,7 @@ public class UserController {
     public boolean update(User user){
         boolean res = true;
         try {
-            helper = OpenHelperManager.getHelper(contexto,DatabaseHelper.class);
+            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
             RuntimeExceptionDao<User, Integer> usuarioDao = helper.getUsuarioRuntimeDao();
             usuarioDao.update(user);
         } catch (Exception ex) {
@@ -54,7 +54,7 @@ public class UserController {
     }
 
     //Funcion que permite mostrar toda la informacion del usuario logueado
-    public User show(Context context){
+    public User show(){
         User user;
         try {
             helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
@@ -71,7 +71,7 @@ public class UserController {
     public boolean delete(User user){
         boolean res = true;
         try {
-            helper = OpenHelperManager.getHelper(contexto,DatabaseHelper.class);
+            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
             RuntimeExceptionDao<User, Integer> userDao = helper.getUsuarioRuntimeDao();
             userDao.delete(user);
         } catch (Exception ex) {
@@ -85,7 +85,7 @@ public class UserController {
     public boolean session(){
         boolean res = false;
         try {
-            helper = OpenHelperManager.getHelper(contexto,DatabaseHelper.class);
+            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
             RuntimeExceptionDao<User, Integer> usuarioDao = helper.getUsuarioRuntimeDao();
             int cantidad = (int)usuarioDao.countOf();
             if(cantidad > 0){
@@ -101,9 +101,9 @@ public class UserController {
     public boolean logout(){
         boolean res = true;
         try {
-            helper = OpenHelperManager.getHelper(contexto,DatabaseHelper.class);
+            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
             RuntimeExceptionDao<User, Integer> usuarioDao = helper.getUsuarioRuntimeDao();
-            int id = show(contexto).getCode();
+            int id = show().getCode();
             usuarioDao.deleteById(id);
             helper.onResetDataBase();
         }catch (Exception ex){
@@ -117,7 +117,7 @@ public class UserController {
     public List<User> showAll(){
         List<User> users;
         try {
-            helper = OpenHelperManager.getHelper(contexto,DatabaseHelper.class);
+            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
             RuntimeExceptionDao<User, Integer> userDao = helper.getUsuarioRuntimeDao();
             users = userDao.queryForAll();
         } catch (Exception ex) {
@@ -130,7 +130,7 @@ public class UserController {
     public boolean changeToken(String new_token){
         boolean res = true;
         try {
-            helper = OpenHelperManager.getHelper(contexto,DatabaseHelper.class);
+            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
             RuntimeExceptionDao<User, Integer> userDao = helper.getUsuarioRuntimeDao();
             User user = userDao.queryForId(1);
             user.setToken(new_token);

@@ -1,6 +1,5 @@
 package com.ideamos.web.questionit.Service;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import retrofit.Callback;
 import retrofit.http.Field;
@@ -79,25 +78,57 @@ public interface Service {
             Callback<JsonObject> cb
     );
 
-    @GET("/api/posts/get")
+//region Posts
+
+    @GET("/api/post/get")
     void getPosts(
             @Query("token") String token,
             Callback<JsonObject> cb
     );
 
-    @GET("/api/posts/category/get")
+    @GET("/api/post/category/get")
     void getCategories(
             @Query("token") String token,
             Callback<JsonObject> cb
     );
 
-//Pruebas
-
-    @FormUrlEncoded
-    @POST("/api/posts/try")
-    void array(
-            @Field("answers")String anwers,
+    @GET("/api/post/answer/type/get")
+    void getAnswerTypes(
+            @Query("token") String token,
             Callback<JsonObject> cb
     );
+
+    @FormUrlEncoded
+    @POST("/api/post/create")
+    void createPost(
+            @Query("token") String token,
+            @Field("question")String question,
+            @Field("user_id")int user_id,
+            @Field("category_id")int category_id,
+            @Field("answer_type")int answer_type,
+            @Field("answers")String anwers,
+            @Field("active")boolean active,
+            Callback<JsonObject> cb
+    );
+
+//endregion
+
+//region Answers
+
+    @GET("/api/post/answer/get/{post_id}")
+    void getUserAnswers(
+            @Query("token") String token,
+            @Path("post_id") Integer post_id,
+            Callback<JsonObject> cb
+    );
+
+    @GET("/api/post/answer/options/get/{post_id}")
+    void getAnswerOptions(
+            @Query("token") String token,
+            @Path("post_id") Integer post_id,
+            Callback<JsonObject> cb
+    );
+
+//endregion
 
 }

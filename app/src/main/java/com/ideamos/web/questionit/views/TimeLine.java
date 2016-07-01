@@ -1,12 +1,14 @@
 package com.ideamos.web.questionit.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +19,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -44,7 +48,7 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class TimeLine extends AppCompatActivity
+public class Timeline extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     //Variables de entorno y soporte
@@ -62,11 +66,15 @@ public class TimeLine extends AppCompatActivity
     @Bind(R.id.nav_view)NavigationView nav_view;
     @Bind(R.id.drawer_layout)DrawerLayout drawer_layout;
     @Bind(R.id.toolbar)Toolbar toolbar;
+    @Bind(R.id.swipe_refresh)SwipeRefreshLayout swipe_refresh;
     @Bind(R.id.recycler)RecyclerView recycler;
+    @Bind(R.id.fab)FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
         setContentView(R.layout.activity_time_line);
         ButterKnife.bind(this);
         setupContext();
@@ -88,7 +96,8 @@ public class TimeLine extends AppCompatActivity
         setupToolbar();
         setupNavigation();
         loadDataUser();
-        getPosts();
+        getPosts(false);
+        setupSwipeRefresh();
     }
 
     public void setupNavigation(){
@@ -144,7 +153,7 @@ public class TimeLine extends AppCompatActivity
     }
 
     public void setupRecycler(){
-        List<Post> posts = postController.list(context);
+        List<Post> posts = postController.list();
         Recycler adapter = new Recycler(context, posts);
         recycler.setLayoutManager(
                 new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
@@ -154,17 +163,33 @@ public class TimeLine extends AppCompatActivity
         recycler.addItemDecoration(space);
     }
 
+    public void setupSwipeRefresh(){
+        swipe_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getPosts(true);
+            }
+        });
+        swipe_refresh.setColorSchemeResources(
+                R.color.colorPrimary,
+                R.color.colorAccent,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_green_light
+        );
+    }
+
     @OnClick(R.id.fab)
     public void add(View view){
-        Snackbar.make(
-                view, "Esto es una prueba", Snackbar.LENGTH_LONG
-        ).show();
+        fab.hide();
+        Intent create_post = new Intent(Timeline.this, CreatePost.class);
+        startActivityForResult(create_post, 91);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
 //Funciones de carga visuales de datos
 
     public void loadDataUser(){
-        User user = userController.show(context);
+        User user = userController.show();
         lbl_fullname_navigation.setText(user.getFullName());
         lbl_email_navigation.setText(user.getEmail());
         Picasso.with(context)
@@ -177,9 +202,9 @@ public class TimeLine extends AppCompatActivity
 
 //Funciones de consulta a la api
 
-    public void getPosts(){
-        final String url = getString(R.string.url_test);
-        String token = userController.show(context).getToken();
+    public void getPosts(final boolean refresh){
+        final String url = getString(R.string.url_con);
+        String token = userController.show().getToken();
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(url)
@@ -193,13 +218,16 @@ public class TimeLine extends AppCompatActivity
                     JsonArray array = jsonObject.get("posts").getAsJsonArray();
                     String new_token = jsonObject.get("new_token").getAsString();
                     if(userController.changeToken(new_token)){
-                        savePosts(array);
+                        savePosts(array, refresh);
                     }
+                } else {
+                    if(refresh){swipe_refresh.setRefreshing(false);}
                 }
             }
             @Override
             public void failure(RetrofitError error) {
                 try {
+                    if(refresh){swipe_refresh.setRefreshing(false);}
                     Log.e("Error", "Se ha producido un error durante el proceso, intentarlo más tarde.");
                     Log.e("Timeline(getPosts)", "Error: " + error.getBody().toString());
                 } catch (Exception ex) {
@@ -209,7 +237,7 @@ public class TimeLine extends AppCompatActivity
         });
     }
 
-    public boolean savePosts(JsonArray array){
+    public boolean savePosts(JsonArray array, boolean refresh){
         boolean res = true;
         try {
             for (int i = 0; i < array.size(); i++) {
@@ -223,6 +251,7 @@ public class TimeLine extends AppCompatActivity
                     break;
                 }
             }
+            if(refresh){swipe_refresh.setRefreshing(false);}
             setupRecycler();
         } catch (JsonIOException ex) {
             res = false;
@@ -234,8 +263,8 @@ public class TimeLine extends AppCompatActivity
     //Seccion para cerrar la sesion y borrado de datos de la aplicacion
     public void logout(){
         dialog.dialogProgress("Cerrando sesión...");
-        final String url = getString(R.string.url_test);
-        String token = userController.show(context).getToken();
+        final String url = getString(R.string.url_con);
+        String token = userController.show().getToken();
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(url)
@@ -299,7 +328,7 @@ public class TimeLine extends AppCompatActivity
     public void exit(String message){
         ToastCustomer toast = new ToastCustomer(context);
         toast.toastExit(message);
-        Intent timeline = new Intent(TimeLine.this, Login.class);
+        Intent timeline = new Intent(Timeline.this, Login.class);
         startActivity(timeline);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
@@ -307,7 +336,8 @@ public class TimeLine extends AppCompatActivity
 
     public void logoutSocial(){
         try {
-            if(userController.show(context).getSocial()){
+            boolean social = userController.show().getSocial();
+            if(social){
                 LoginManager.getInstance().logOut();
             }
         } catch (FacebookException ex) {
@@ -315,4 +345,16 @@ public class TimeLine extends AppCompatActivity
         }
     }
 
+//Seccion de entrega de datos
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 91){
+            fab.show();
+            if (resultCode == Activity.RESULT_OK){
+                getPosts(false);
+            }
+        }
+    }
 }

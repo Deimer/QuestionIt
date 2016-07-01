@@ -16,12 +16,12 @@ import java.util.List;
 public class CategoryController {
 
     private DatabaseHelper helper;
-    private Context contexto;
+    private Context context;
 
     public void categoryController(){}
 
-    public CategoryController(Context contexto){
-        this.contexto = contexto;
+    public CategoryController(Context context){
+        this.context = context;
         categoryController();
     }
 
@@ -29,7 +29,7 @@ public class CategoryController {
     public boolean create(Category category){
         boolean res = true;
         try {
-            helper = OpenHelperManager.getHelper(contexto, DatabaseHelper.class);
+            helper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
             RuntimeExceptionDao<Category, Integer> categoryDao = helper.getCategoryRuntimeDao();
             categoryDao.createOrUpdate(category);
         } catch (Exception ex) {
@@ -43,7 +43,7 @@ public class CategoryController {
     public boolean update(Category category){
         boolean res = true;
         try {
-            helper = OpenHelperManager.getHelper(contexto,DatabaseHelper.class);
+            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
             RuntimeExceptionDao<Category, Integer> categoryDao = helper.getCategoryRuntimeDao();
             categoryDao.update(category);
         } catch (Exception ex) {
@@ -54,7 +54,7 @@ public class CategoryController {
     }
 
     //Funcion que permite mostrar toda la informacion de una categoria
-    public Category show(Context context, int id){
+    public Category show(int id){
         Category category;
         try {
             helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
@@ -67,7 +67,7 @@ public class CategoryController {
         return category;
     }
 
-    public List<Category> list(Context context){
+    public List<Category> list(){
         List<Category> list;
         try {
             helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
@@ -84,7 +84,7 @@ public class CategoryController {
     public boolean delete(Category category){
         boolean res = true;
         try {
-            helper = OpenHelperManager.getHelper(contexto,DatabaseHelper.class);
+            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
             RuntimeExceptionDao<Category, Integer> categoryDao = helper.getCategoryRuntimeDao();
             categoryDao.delete(category);
         } catch (Exception ex) {

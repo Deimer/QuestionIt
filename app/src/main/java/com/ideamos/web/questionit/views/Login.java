@@ -23,11 +23,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
+import com.ideamos.web.questionit.Controllers.AnswerController;
 import com.ideamos.web.questionit.Controllers.CategoryController;
 import com.ideamos.web.questionit.Controllers.UserController;
 import com.ideamos.web.questionit.Helpers.DataOption;
 import com.ideamos.web.questionit.Helpers.SweetDialog;
 import com.ideamos.web.questionit.Helpers.Validate;
+import com.ideamos.web.questionit.Models.AnswerType;
 import com.ideamos.web.questionit.Models.Category;
 import com.ideamos.web.questionit.Models.SocialUser;
 import com.ideamos.web.questionit.Models.User;
@@ -49,6 +51,7 @@ public class Login extends AppCompatActivity {
     private Context context;
     private UserController userController;
     private CategoryController categoryController;
+    private AnswerController answerController;
     private SweetDialog dialog;
     private Validate validate;
     private DataOption data;
@@ -74,6 +77,7 @@ public class Login extends AppCompatActivity {
         context = this;
         userController = new UserController(context);
         categoryController = new CategoryController(context);
+        answerController = new AnswerController(context);
         dialog = new SweetDialog(context);
         validate = new Validate(context);
         data = new DataOption();
@@ -134,7 +138,7 @@ public class Login extends AppCompatActivity {
 
     public void login(String email, String password) {
         dialog.dialogProgress("Iniciando sesión...");
-        final String url = getString(R.string.url_test);
+        final String url = getString(R.string.url_con);
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(url)
@@ -149,6 +153,7 @@ public class Login extends AppCompatActivity {
                     User user = new Gson().fromJson(jsonObject.get("user"), User.class);
                     user.setToken(token);
                     if(userController.create(user)){
+                        getCategories(token);
                         dialog.cancelarProgress();
                         next(user.getState());
                     }
@@ -174,7 +179,7 @@ public class Login extends AppCompatActivity {
 
     public void socialLogin(SocialUser social, String email){
         dialog.dialogProgress("Iniciando sesión...");
-        final String url = getString(R.string.url_test);
+        final String url = getString(R.string.url_con);
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(url)
@@ -190,7 +195,8 @@ public class Login extends AppCompatActivity {
                         User user = new Gson().fromJson(jsonObject.get("user"), User.class);
                         user.setToken(token);
                         if(userController.create(user)){
-                            getCategories();
+                            getCategories(token);
+                            getAnswerTypes(token);
                             dialog.cancelarProgress();
                             next(user.getState());
                         }
@@ -219,9 +225,8 @@ public class Login extends AppCompatActivity {
         });
     }
 
-    public void getCategories(){
-        final String url = getString(R.string.url_test);
-        String token = userController.show(context).getToken();
+    public void getCategories(String token){
+        final String url = getString(R.string.url_con);
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(url)
@@ -244,9 +249,41 @@ public class Login extends AppCompatActivity {
             public void failure(RetrofitError error) {
                 try {
                     Log.e("Error", "Se ha producido un error durante el proceso, intentarlo más tarde.");
-                    Log.e("Login(socialLogin)", "Error: " + error.getBody().toString());
+                    Log.e("Login(getCategories)", "Error: " + error.getBody().toString());
                 } catch (Exception ex) {
-                    Log.e("Login(socialLogin)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
+                    Log.e("Login(getCategories)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
+                }
+            }
+        });
+    }
+
+    public void getAnswerTypes(String token){
+        final String url = getString(R.string.url_con);
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setEndpoint(url)
+                .build();
+        Service api = restAdapter.create(Service.class);
+        api.getAnswerTypes(token, new Callback<JsonObject>() {
+            @Override
+            public void success(JsonObject jsonObject, Response response) {
+                boolean success = jsonObject.get("success").getAsBoolean();
+                if (success) {
+                    JsonArray array = jsonObject.get("answer_types").getAsJsonArray();
+                    for (int i = 0; i < array.size(); i++) {
+                        JsonObject json = array.get(i).getAsJsonObject();
+                        AnswerType answerType = new Gson().fromJson(json, AnswerType.class);
+                        answerController.create(answerType);
+                    }
+                }
+            }
+            @Override
+            public void failure(RetrofitError error) {
+                try {
+                    Log.e("Error", "Se ha producido un error durante el proceso, intentarlo más tarde.");
+                    Log.e("Login(getAnswerTypes)", "Error: " + error.getBody().toString());
+                } catch (Exception ex) {
+                    Log.e("Login(getAnswerTypes)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
                 }
             }
         });
@@ -256,7 +293,7 @@ public class Login extends AppCompatActivity {
 
     public void next(int state){
         if(state == 1){
-            Intent timeLine = new Intent(Login.this, TimeLine.class);
+            Intent timeLine = new Intent(Login.this, Timeline.class);
             startActivity(timeLine);
         } else if(state == 2) {
             Intent update = new Intent(Login.this, Update.class);
@@ -302,12 +339,13 @@ public class Login extends AppCompatActivity {
                                             .get("picture").getAsJsonObject()
                                             .get("data").getAsJsonObject()
                                             .get("url").getAsString());
+                                    System.out.println(social.toString());
                                     socialLogin(social, email_social);
                                 }
                             }
                     );
                     Bundle parameters = new Bundle();
-                    parameters.putString("fields", "id,name,email,picture.type(large)");
+                    parameters.putString("fields", "id,name,email,picture.width(500).height(500)");
                     request.setParameters(parameters);
                     request.executeAsync();
                 }
@@ -315,7 +353,7 @@ public class Login extends AppCompatActivity {
                 @Override
                 public void onCancel() {
                     dialog.cancelarProgress();
-                    dialog.dialogWarning("", "Cancelado por el usuario");
+                    dialog.dialogWarning("Atención", "Cancelado por el usuario");
                 }
 
                 @Override
