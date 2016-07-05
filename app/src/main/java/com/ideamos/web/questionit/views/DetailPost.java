@@ -108,11 +108,13 @@ public class DetailPost extends AppCompatActivity {
 
     public void setupRecycler(List<UserAnswer> answers){
         //recycler.setHasFixedSize(true);
-        RecyclerAnswerPost adapter = new RecyclerAnswerPost(context, answers);
-        recycler.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
-        recycler.setAdapter(adapter);
-        SpaceItemView space = new SpaceItemView(0);
-        recycler.addItemDecoration(space);
+        if(answers.size() > 0){
+            RecyclerAnswerPost adapter = new RecyclerAnswerPost(context, answers);
+            recycler.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
+            recycler.setAdapter(adapter);
+            SpaceItemView space = new SpaceItemView(0);
+            recycler.addItemDecoration(space);
+        }
     }
 
     public void loadInfoPost(int code){
@@ -258,7 +260,7 @@ public class DetailPost extends AppCompatActivity {
         Button but_send = (Button)view.findViewById(R.id.but_send);
         FrameLayout frame = (FrameLayout)view.findViewById(R.id.frame_seekbar);
         SeekArc seekbar = (SeekArc)view.findViewById(R.id.seekbar);
-        final TextView lbl_progress_bar = (TextView)view.findViewById(R.id.lbl_progress_seekarc);
+        TextView lbl_progress_bar = (TextView)view.findViewById(R.id.lbl_progress_seekarc);
         //setters
         lbl_question.setText(lbl_post_question.getText().toString());
         createOptionsAnswers(layout_options, frame, seekbar, lbl_progress_bar);
@@ -277,7 +279,8 @@ public class DetailPost extends AppCompatActivity {
         alertDialog.show();
     }
 
-    public void createOptionsAnswers(LinearLayout layout_options, FrameLayout frame, SeekArc seekArc, final TextView lbl_progress_bar){
+    public void createOptionsAnswers(LinearLayout layout_options, FrameLayout frame, SeekArc seekArc, TextView lbl_progress_bar){
+        layout_options.removeAllViews();
         switch (answer_type){
             case 1:
                 uniqueOptions(layout_options);
@@ -299,8 +302,8 @@ public class DetailPost extends AppCompatActivity {
             radio.setText(answer.getDescription());
             radio.setId(answer.getAnswer_id());
             group.addView(radio);
-            layout.addView(group);
         }
+        layout.addView(group);
     }
 
     public void multipleOptions(LinearLayout layout){

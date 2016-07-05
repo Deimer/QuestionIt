@@ -68,6 +68,8 @@
     <string name="createpost_option">Agrega una opción</string>
     <string name="createpost_remove">Remover</string>
     <string name="createpost_add">Agregar</string>
+    <string name="createpost_preview">Vista Previa</string>
+    <string name="createpost_publish">Publicar</string>
 
     <!-- Navigation drawer -->
     <string name="dialog_answer_cancel">Cancelar</string>

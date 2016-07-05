@@ -34,15 +34,15 @@
         <ImageView
             android:id="@+id/img_question"
             android:contentDescription="@string/app_name"
-            android:src="@mipmap/ic_next_white"
+            android:src="@mipmap/ic_user_white"
             android:scaleType="fitCenter"
             android:layout_weight=".50"
             android:layout_width="0dp"
-            android:layout_height="50dp" />
+            android:layout_height="35dp" />
         <ImageView
             android:id="@+id/img_answer"
             android:contentDescription="@string/app_name"
-            android:src="@mipmap/ic_edit_white"
+            android:src="@mipmap/ic_next_white"
             android:scaleType="fitCenter"
             android:layout_weight=".50"
             android:layout_width="0dp"

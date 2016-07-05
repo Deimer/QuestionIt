@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,11 +12,16 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -34,6 +40,8 @@ import com.ideamos.web.questionit.Models.Category;
 import com.ideamos.web.questionit.R;
 import com.ideamos.web.questionit.Service.Service;
 import com.jaredrummler.materialspinner.MaterialSpinner;
+import com.squareup.picasso.Picasso;
+import com.triggertrap.seekarc.SeekArc;
 import com.vstechlab.easyfonts.EasyFonts;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +49,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import de.hdodenhof.circleimageview.CircleImageView;
 import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -292,7 +301,8 @@ public class CreatePost extends AppCompatActivity {
                     int answer_type = answerController.show(index).getAnswer_type_id();
                     String answers = new Gson().toJson(list);
                     System.out.println(answers);
-                    createQuestion(question, user_id, category_id, answer_type, answers);
+                    inflateDialogAnswer();
+                    //createQuestion(question, user_id, category_id, answer_type, answers);
                 }
             }
         } else {
@@ -353,6 +363,97 @@ public class CreatePost extends AppCompatActivity {
                     }
                 })
                 .show();
+    }
+
+    public void inflateDialogAnswer(){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_preview_question, null);
+        builder.setView(view);
+        final AlertDialog alertDialog = builder.create();
+        CircleImageView avatar = (CircleImageView)view.findViewById(R.id.avatar_preview_post);
+        TextView lbl_username = (TextView)view.findViewById(R.id.lbl_username_preview_post);
+        TextView lbl_question = (TextView)view.findViewById(R.id.lbl_question_preview_post);
+        LinearLayout layout_options = (LinearLayout)view.findViewById(R.id.layout_preview_options);
+        FrameLayout frame_scale = (FrameLayout)view.findViewById(R.id.layout_preview_scale);
+        SeekArc seekbar = (SeekArc)view.findViewById(R.id.seekbar_preview_post);
+        TextView lbl_progress_bar = (TextView)view.findViewById(R.id.lbl_seekarc_preview_post);
+        Button but_cancel = (Button)view.findViewById(R.id.but_cancel);
+        Button but_send = (Button)view.findViewById(R.id.but_send);
+        //setters
+        loadAvtarProfile(avatar);
+        lbl_username.setText(userController.show().getUsername());
+        lbl_question.setText(preparedQuestion());
+        enabledAnswers(layout_options, frame_scale, seekbar, lbl_progress_bar);
+        but_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        but_send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        //Vistas del dialog
+        alertDialog.show();
+    }
+
+    public void enabledAnswers(LinearLayout layout, FrameLayout frame, SeekArc seekArc, TextView lbl_progress){
+        int index = spinner_answer_types.getSelectedIndex();
+        int answer_type = answerController.show(index).getAnswer_type_id();
+        if(answer_type == 1 || answer_type == 2){
+            enableOptions(layout, answer_type);
+        } else if(answer_type == 3){
+            enableScale(frame, seekArc, lbl_progress);
+        }
+    }
+
+    public void enableOptions(LinearLayout layout, int option){
+        layout.removeAllViews();
+        layout.setVisibility(View.VISIBLE);
+        List<Answer> list = answersList();
+        if(option == 1){
+            RadioGroup group = new RadioGroup(context);
+            for (int i = 0; i < list.size(); i++) {
+                RadioButton radio = new RadioButton(context);
+                radio.setText(list.get(i).getDescription());
+                group.addView(radio);
+            }
+            layout.addView(group);
+        } else if(option == 2){
+            for (int i = 0; i < list.size(); i++) {
+                CheckBox check = new CheckBox(context);
+                check.setText(list.get(i).getDescription());
+                layout.addView(check);
+            }
+        }
+    }
+
+    public void enableScale(FrameLayout frameLayout, SeekArc seekArc, final TextView lbl_progress){
+        frameLayout.setVisibility(View.VISIBLE);
+
+        seekArc.setOnSeekArcChangeListener(new SeekArc.OnSeekArcChangeListener() {
+            @Override
+            public void onProgressChanged(SeekArc seekArc, int progress, boolean b) {
+                lbl_progress.setText(String.valueOf(progress));
+            }
+            @Override
+            public void onStartTrackingTouch(SeekArc seekArc) {}
+            @Override
+            public void onStopTrackingTouch(SeekArc seekArc) {}
+        });
+    }
+
+    public void loadAvtarProfile(CircleImageView avatar){
+        String url_avatar = userController.show().getAvatar();
+        Picasso.with(context)
+                .load(url_avatar)
+                .centerCrop().fit()
+                .error(R.drawable.com_facebook_profile_picture_blank_square)
+                .into(avatar);
     }
 
 //endregion
