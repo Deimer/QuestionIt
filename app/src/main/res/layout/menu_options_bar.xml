@@ -14,14 +14,14 @@
     tools:showIn="@layout/activity_post">
 
     <ImageView
-        android:id="@+id/item1"
+        android:id="@+id/item4"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:src="@mipmap/ic_reply"
+        android:src="@mipmap/ic_user_white"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:visibility="visible" />
+        android:visibility="visible"/>
     <ImageView
         android:id="@+id/item2"
         android:paddingTop="10dp"
@@ -45,13 +45,13 @@
         android:layout_height="wrap_content"
         android:visibility="visible" />
     <ImageView
-        android:id="@+id/item4"
+        android:id="@+id/item1"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:src="@mipmap/ic_user_white"
+        android:src="@drawable/ic_send_button"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:visibility="visible"/>
+        android:visibility="visible" />
 
 </com.michaldrabik.tapbarmenulib.TapBarMenu>

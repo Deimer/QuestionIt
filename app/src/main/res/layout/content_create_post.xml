@@ -144,32 +144,32 @@
                     <LinearLayout
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="6dp"
                         android:layout_gravity="center"
+                        android:gravity="center"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <Button
-                            android:id="@+id/icon_remove_answers"
-                            android:text="@string/createpost_remove"
-                            android:textColor="@color/secondary_text"
-                            android:textAllCaps="false"
-                            android:background="@drawable/but_background_dark"
+                        android:layout_height="55dp">
+                        <android.support.design.widget.FloatingActionButton
+                            android:id="@+id/fab_remove_answers"
+                            app:backgroundTint="@color/secondary_text"
+                            app:fabSize="mini"
+                            app:rippleColor="@color/divider"
+                            android:scaleType="center"
+                            android:src="@mipmap/ic_cancel_white"
                             android:layout_width="wrap_content"
-                            android:layout_height="33dp" />
+                            android:layout_height="wrap_content" />
                         <Space
                             android:background="@android:color/transparent"
-                            android:layout_weight=".80"
-                            android:layout_width="0dp"
+                            android:layout_width="170dp"
                             android:layout_height="match_parent" />
-                        <Button
-                            android:id="@+id/icon_add_answers"
-                            android:text="@string/createpost_add"
-                            android:textColor="@color/colorPrimary"
-                            android:textAllCaps="false"
-                            android:background="@drawable/but_background_light"
+                        <android.support.design.widget.FloatingActionButton
+                            android:id="@+id/fab_add_answers"
+                            app:backgroundTint="@color/colorPrimary"
+                            app:fabSize="mini"
+                            app:rippleColor="@color/colorPrimaryLight"
+                            android:scaleType="center"
+                            android:src="@mipmap/ic_plus_add"
                             android:layout_width="wrap_content"
-                            android:layout_height="33dp" />
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycler"

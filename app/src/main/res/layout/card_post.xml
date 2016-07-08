@@ -78,7 +78,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content">
                 <ImageView
-                    android:id="@+id/img_like"
+                    android:id="@+id/icon_like"
                     android:src="@mipmap/ic_like"
                     android:layout_width="match_parent"
                     android:layout_height="25dp" />
@@ -89,7 +89,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content">
                 <ImageView
-                    android:id="@+id/img_dislike"
+                    android:id="@+id/icon_dislike"
                     android:src="@mipmap/ic_dislike"
                     android:layout_width="match_parent"
                     android:layout_height="25dp" />
@@ -100,7 +100,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content">
                 <ImageView
-                    android:id="@+id/img_favorite"
+                    android:id="@+id/icon_favorite"
                     android:src="@mipmap/ic_no_favorite"
                     android:layout_width="match_parent"
                     android:layout_height="25dp" />

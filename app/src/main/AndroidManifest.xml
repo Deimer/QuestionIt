@@ -90,6 +90,7 @@
         <activity
             android:name=".views.CreatePost"
             android:label="@string/title_activity_create_post"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation|screenSize">
             <intent-filter>

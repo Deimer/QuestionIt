@@ -32,7 +32,7 @@
         android:layout_width="290dp"
         android:layout_height="40dp">
         <ImageView
-            android:id="@+id/img_question"
+            android:id="@+id/icon_profile"
             android:contentDescription="@string/app_name"
             android:src="@mipmap/ic_user_white"
             android:scaleType="fitCenter"
@@ -40,7 +40,7 @@
             android:layout_width="0dp"
             android:layout_height="35dp" />
         <ImageView
-            android:id="@+id/img_answer"
+            android:id="@+id/icon_question"
             android:contentDescription="@string/app_name"
             android:src="@mipmap/ic_next_white"
             android:scaleType="fitCenter"

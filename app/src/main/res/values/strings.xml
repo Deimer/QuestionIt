@@ -5,7 +5,7 @@
     <string name="title_activity_login">Login</string>
 
     <!-- Cadenas de conexion api -->
-    <string name="url_con">http://192.168.0.197:80</string>
+    <string name="url_con">http://192.168.0.198:80</string>
     <!-- Cadena conexion facebook -->
     <string name="facebook_app_id">1643742285950373</string>
     <string name="provider_social">facebook</string>
@@ -47,12 +47,12 @@
     <!-- Pantalla de timeline -->
     <string name="title_activity_time_line">TimeLine</string>
     <string name="texto">Si éste XML es usado como el layout de una Activity, con los campos
-        delTextView establecidos a valores significativos, entonces así es cómo se renderizaría
-        en un dispositivo Android</string>
+        delTextView establecidos a valores significativos.</string>
     <string name="post_username">Username</string>
     <string name="title_activity_post">Post</string>
     <string name="title_activity_navigation">Navigation</string>
     <string name="title_navigation">Menu</string>
+    <string name="post_send_answer">Enviar</string>
 
     <!-- Navigation drawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -64,7 +64,7 @@
     <string name="createpost_question">Pregunta</string>
     <string name="createpost_questions">Escribe tu pregunta…</string>
     <string name="createpost_answer_type">Tipo de respuesta</string>
-    <string name="createpost_option_answers">Opciones de respuesta</string>
+    <string name="createpost_option_answers">Añadir opciones de respuesta</string>
     <string name="createpost_option">Agrega una opción</string>
     <string name="createpost_remove">Remover</string>
     <string name="createpost_add">Agregar</string>

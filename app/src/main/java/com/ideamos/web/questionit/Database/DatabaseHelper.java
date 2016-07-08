@@ -8,6 +8,7 @@ import android.util.Log;
 import com.ideamos.web.questionit.Models.Answer;
 import com.ideamos.web.questionit.Models.AnswerType;
 import com.ideamos.web.questionit.Models.Category;
+import com.ideamos.web.questionit.Models.Favorite;
 import com.ideamos.web.questionit.Models.Post;
 import com.ideamos.web.questionit.Models.SocialUser;
 import com.ideamos.web.questionit.Models.User;
@@ -45,6 +46,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
     private RuntimeExceptionDao<AnswerType, Integer> answerTypeRuntimeDao = null;
     private Dao<UserAnswer, Integer> userAnswerDao = null;
     private RuntimeExceptionDao<UserAnswer, Integer> userAnswerRuntimeDao = null;
+    private Dao<Favorite, Integer> favoriteDao = null;
+    private RuntimeExceptionDao<Favorite, Integer> favoriteRuntimeDao = null;
 
     /*Funcion que permite crear la base de datos cuando inicia la aplicacion
     * Usa como parametros;
@@ -61,6 +64,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
             TableUtils.createTable(source, Answer.class);
             TableUtils.createTable(source, AnswerType.class);
             TableUtils.createTable(source, UserAnswer.class);
+            TableUtils.createTable(source, Favorite.class);
         } catch (SQLException sqlEx) {
             Log.e("DatabaseHelper(onCreate)", "Error: " + sqlEx.getMessage());
             throw new RuntimeException(sqlEx);
@@ -84,6 +88,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
             TableUtils.dropTable(source, Answer.class, true);
             TableUtils.dropTable(source, AnswerType.class, true);
             TableUtils.dropTable(source, UserAnswer.class, true);
+            TableUtils.dropTable(source, Favorite.class, true);
             onCreate(db, source);
         } catch (SQLException sqlEx) {
             Log.e("DatabaseHelper(onUpgrade)", "Error: " + sqlEx.getMessage());
@@ -102,18 +107,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
             TableUtils.dropTable(source, User.class, true);
             TableUtils.dropTable(source, SocialUser.class, true);
             TableUtils.dropTable(source, Post.class, true);
-            TableUtils.dropTable(source, Category.class, true);
             TableUtils.dropTable(source, Answer.class, true);
-            TableUtils.dropTable(source, AnswerType.class, true);
             TableUtils.dropTable(source, UserAnswer.class, true);
+            TableUtils.dropTable(source, Favorite.class, true);
             //Recreacion de las tablas
             TableUtils.createTable(source, User.class);
             TableUtils.createTable(source, SocialUser.class);
             TableUtils.createTable(source, Post.class);
-            TableUtils.createTable(source, Category.class);
             TableUtils.createTable(source, Answer.class);
-            TableUtils.createTable(source, AnswerType.class);
             TableUtils.createTable(source, UserAnswer.class);
+            TableUtils.createTable(source, Favorite.class);
         }catch (SQLException sqlEx){
             Log.i("DatabaseHelper(onResetDataBase)", "Error: " + sqlEx.getMessage());
             throw new RuntimeException(sqlEx);
@@ -136,6 +139,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
         answerTypeRuntimeDao = null;
         userAnswerDao = null;
         userAnswerRuntimeDao = null;
+        favoriteDao = null;
+        favoriteRuntimeDao = null;
     }
 
     public Dao<User, Integer> getUserDao() throws SQLException {
@@ -199,6 +204,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
     public RuntimeExceptionDao<UserAnswer, Integer> getUserAnswerRuntimeDao() {
         if(userAnswerRuntimeDao == null) userAnswerRuntimeDao = getRuntimeExceptionDao(UserAnswer.class);
         return userAnswerRuntimeDao;
+    }
+
+    public Dao<Favorite, Integer> getFavoriteDao() throws SQLException {
+        if(favoriteDao == null) favoriteDao = getDao(Favorite.class);
+        return favoriteDao;
+    }
+    public RuntimeExceptionDao<Favorite, Integer> getFavoriteRuntimeDao() {
+        if(favoriteRuntimeDao == null) favoriteRuntimeDao = getRuntimeExceptionDao(Favorite.class);
+        return favoriteRuntimeDao;
     }
 
 }

@@ -2,21 +2,24 @@ package com.ideamos.web.questionit.views;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
+import android.os.Handler;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -54,7 +57,6 @@ public class DetailPost extends AppCompatActivity {
     private ParseTime parseTime;
     private SweetDialog dialog;
     private int answer_type;
-    private List<Answer> answerList;
 
     //Elementos de la vista
     @Bind(R.id.toolbar)Toolbar toolbar;
@@ -63,9 +65,11 @@ public class DetailPost extends AppCompatActivity {
     @Bind(R.id.lbl_username_author)TextView lbl_username_author;
     @Bind(R.id.lbl_post_question)TextView lbl_post_question;
     @Bind(R.id.lbl_created_date)TextView lbl_created_date;
+    @Bind(R.id.layout_answers)LinearLayout layout_answers;
     @Bind(R.id.layout_not_found)LinearLayout layout_not_found;
     @Bind(R.id.recycler)RecyclerView recycler;
     @Bind(R.id.tap_bar_menu)TapBarMenu tap_bar_menu;
+    @Bind(R.id.item1)ImageView item_send;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,16 +85,23 @@ public class DetailPost extends AppCompatActivity {
         postController = new PostController(context);
         parseTime = new ParseTime(context);
         dialog = new SweetDialog(context);
-        answerList = new ArrayList<>();
         setupToolbar();
         setupConfig();
     }
 
     public void setupToolbar(){
         setSupportActionBar(toolbar);
-        if(getActionBar() != null){
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-            getActionBar().setDisplayShowTitleEnabled(false);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            //actionBar.setDisplayShowTitleEnabled(false);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
         }
     }
 
@@ -137,6 +148,20 @@ public class DetailPost extends AppCompatActivity {
     @OnClick(R.id.tap_bar_menu)
     public void clickMenuBar(){
         tap_bar_menu.toggle();
+        if(tap_bar_menu.isOpened()){
+            setupTitle(700);
+        }
+    }
+
+    public void setupTitle(int time){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                YoYo.with(Techniques.Pulse)
+                        .duration(700)
+                        .playOn(item_send);
+            }
+        }, time);
     }
 
     @OnClick({ R.id.item1, R.id.item2, R.id.item3, R.id.item4 })
@@ -145,7 +170,7 @@ public class DetailPost extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.item1:
                 System.out.println("Click item # 1");
-                inflateDialogAnswer();
+                setupTitle(10);
                 break;
             case R.id.item2:
                 System.out.println("Click item # 2");
@@ -172,11 +197,13 @@ public class DetailPost extends AppCompatActivity {
     }
 
     public void saveAnswerOptions(JsonArray array){
+        List<Answer> answerList = new ArrayList<>();
         for (int i = 0; i < array.size(); i++) {
             JsonObject json = array.get(i).getAsJsonObject();
             Answer answers = new Gson().fromJson(json, Answer.class);
             answerList.add(answers);
         }
+        createOptionsAnswers(answerList);
     }
 
 //region Seccion: funciones de consultas a la api
@@ -213,12 +240,12 @@ public class DetailPost extends AppCompatActivity {
                 .setEndpoint(url)
                 .build();
         Service api = restAdapter.create(Service.class);
-        api.getUserAnswers(token, post_id, new Callback<JsonObject>() {
+        api.getVotes(token, post_id, new Callback<JsonObject>() {
             @Override
             public void success(JsonObject jsonObject, Response response) {
                 boolean success = jsonObject.get("success").getAsBoolean();
                 if (success) {
-                    JsonArray array = jsonObject.get("user_answers").getAsJsonArray();
+                    JsonArray array = jsonObject.get("votes").getAsJsonArray();
                     saveAnswers(array);
                 } else {
                     String message = jsonObject.get("message").getAsString();
@@ -245,56 +272,26 @@ public class DetailPost extends AppCompatActivity {
     public void answersNotFound(String message){
         TextView textView = new TextView(context);
         textView.setText(message);
+        layout_not_found.setVisibility(View.VISIBLE);
         layout_not_found.addView(textView);
     }
 
-    public void inflateDialogAnswer(){
-        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_answer_post, null);
-        builder.setView(view);
-        final AlertDialog alertDialog = builder.create();
-        TextView lbl_question = (TextView)view.findViewById(R.id.lbl_question);
-        LinearLayout layout_options = (LinearLayout)view.findViewById(R.id.layout_options_answers);
-        Button but_cancel = (Button)view.findViewById(R.id.but_cancel);
-        Button but_send = (Button)view.findViewById(R.id.but_send);
-        FrameLayout frame = (FrameLayout)view.findViewById(R.id.frame_seekbar);
-        SeekArc seekbar = (SeekArc)view.findViewById(R.id.seekbar);
-        TextView lbl_progress_bar = (TextView)view.findViewById(R.id.lbl_progress_seekarc);
-        //setters
-        lbl_question.setText(lbl_post_question.getText().toString());
-        createOptionsAnswers(layout_options, frame, seekbar, lbl_progress_bar);
-        but_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-            }
-        });
-        but_send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-            }
-        });
-        alertDialog.show();
-    }
-
-    public void createOptionsAnswers(LinearLayout layout_options, FrameLayout frame, SeekArc seekArc, TextView lbl_progress_bar){
-        layout_options.removeAllViews();
+    public void createOptionsAnswers(List<Answer> answerList){
+        layout_answers.removeAllViews();
         switch (answer_type){
             case 1:
-                uniqueOptions(layout_options);
+                uniqueOptions(answerList);
                 break;
             case 2:
-                multipleOptions(layout_options);
+                multipleOptions(answerList);
                 break;
             case 3:
-                scaleOptions(frame, seekArc, lbl_progress_bar);
+                scaleOptions();
                 break;
         }
     }
 
-    public void uniqueOptions(LinearLayout layout){
+    public void uniqueOptions(List<Answer> answerList){
         RadioGroup group = new RadioGroup(context);
         for (int i = 0; i < answerList.size(); i++) {
             Answer answer = answerList.get(i);
@@ -303,21 +300,26 @@ public class DetailPost extends AppCompatActivity {
             radio.setId(answer.getAnswer_id());
             group.addView(radio);
         }
-        layout.addView(group);
+        layout_answers.addView(group);
+        layout_answers.setVisibility(View.VISIBLE);
     }
 
-    public void multipleOptions(LinearLayout layout){
+    public void multipleOptions(List<Answer> answerList){
         for (int i = 0; i < answerList.size(); i++) {
             Answer answer = answerList.get(i);
             CheckBox checkbox = new CheckBox(context);
             checkbox.setText(answer.getDescription());
             checkbox.setId(answer.getAnswer_id());
-            layout.addView(checkbox);
+            layout_answers.addView(checkbox);
         }
+        layout_answers.setVisibility(View.VISIBLE);
     }
 
-    public void scaleOptions(FrameLayout frameLayout, SeekArc seekArc, final TextView lbl_progress_bar){
-        frameLayout.setVisibility(View.VISIBLE);
+    public void scaleOptions(){
+        FrameLayout frame = new FrameLayout(context);
+        SeekArc seekArc = new SeekArc(context);
+        final TextView lbl_progress_bar = new TextView(context);
+        frame.setVisibility(View.VISIBLE);
         seekArc.setOnSeekArcChangeListener(new SeekArc.OnSeekArcChangeListener() {
             @Override
             public void onProgressChanged(SeekArc seekArc, int progress, boolean b) {

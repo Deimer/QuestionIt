@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -88,10 +89,10 @@ public class CreatePost extends AppCompatActivity {
     LinearLayout layout_options;
     @Bind(R.id.recycler)
     RecyclerView recycler;
-    @Bind(R.id.icon_add_answers)
-    Button icon_add;
-    @Bind(R.id.icon_remove_answers)
-    Button icon_remove;
+    @Bind(R.id.fab_add_answers)
+    FloatingActionButton icon_add;
+    @Bind(R.id.fab_remove_answers)
+    FloatingActionButton icon_remove;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,13 +212,18 @@ public class CreatePost extends AppCompatActivity {
 //Funciones principales de la activity
 
     public void addItemRecycler(AdapterOptionAnswer adapter){
-        int position = list_items.size();
-        if(position < 5){
-            list_items.add(1);
-            adapter.add(1, position);
-            adapter.notifyItemInserted(position);
+        int code = spinner_answer_types.getSelectedIndex();
+        if(code > 0){
+            int position = list_items.size();
+            if(position < 5){
+                list_items.add(1);
+                adapter.add(1, position);
+                adapter.notifyItemInserted(position);
+            } else {
+                toast.toastWarning("El limite de opciones es de 5");
+            }
         } else {
-            toast.toastWarning("El limite de opciones es de 5");
+            toast.toastWarning("Primero debes seleccionar un tipo de respuesta.");
         }
     }
 
@@ -295,19 +301,22 @@ public class CreatePost extends AppCompatActivity {
             } else {
                 int code = spinner_categories.getSelectedIndex();
                 if(code > 0){
-                    int user_id = userController.show().getUser_id();
-                    int category_id = categoryController.show(code).getCategory_id();
-                    int index = spinner_answer_types.getSelectedIndex();
-                    int answer_type = answerController.show(index).getAnswer_type_id();
-                    String answers = new Gson().toJson(list);
-                    System.out.println(answers);
-                    inflateDialogAnswer();
-                    //createQuestion(question, user_id, category_id, answer_type, answers);
+                    inflateDialogAnswer(list, question, code);
                 }
             }
         } else {
             toast.toastWarning("Debe agregar un texto a la opciones de respuesta.");
         }
+    }
+
+    public void publishPost(List<Answer> list, String question, int code){
+        int user_id = userController.show().getUser_id();
+        int category_id = categoryController.show(code).getCategory_id();
+        int index = spinner_answer_types.getSelectedIndex();
+        int answer_type = answerController.show(index).getAnswer_type_id();
+        String answers = new Gson().toJson(list);
+        System.out.println(answers);
+        createQuestion(question, user_id, category_id, answer_type, answers);
     }
 
     public void createQuestion(String question, int user_id, int category_id, int answer_type, String answers){
@@ -365,7 +374,7 @@ public class CreatePost extends AppCompatActivity {
                 .show();
     }
 
-    public void inflateDialogAnswer(){
+    public void inflateDialogAnswer(final List<Answer> list, final String question, final int code){
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_preview_question, null);
@@ -384,7 +393,7 @@ public class CreatePost extends AppCompatActivity {
         loadAvtarProfile(avatar);
         lbl_username.setText(userController.show().getUsername());
         lbl_question.setText(preparedQuestion());
-        enabledAnswers(layout_options, frame_scale, seekbar, lbl_progress_bar);
+        enabledAnswers(list, layout_options, frame_scale, seekbar, lbl_progress_bar);
         but_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -394,6 +403,7 @@ public class CreatePost extends AppCompatActivity {
         but_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                publishPost(list, question, code);
                 alertDialog.dismiss();
             }
         });
@@ -401,20 +411,19 @@ public class CreatePost extends AppCompatActivity {
         alertDialog.show();
     }
 
-    public void enabledAnswers(LinearLayout layout, FrameLayout frame, SeekArc seekArc, TextView lbl_progress){
+    public void enabledAnswers(List<Answer> list, LinearLayout layout, FrameLayout frame, SeekArc seekArc, TextView lbl_progress){
         int index = spinner_answer_types.getSelectedIndex();
         int answer_type = answerController.show(index).getAnswer_type_id();
         if(answer_type == 1 || answer_type == 2){
-            enableOptions(layout, answer_type);
+            enableOptions(list, layout, answer_type);
         } else if(answer_type == 3){
             enableScale(frame, seekArc, lbl_progress);
         }
     }
 
-    public void enableOptions(LinearLayout layout, int option){
+    public void enableOptions(List<Answer> list, LinearLayout layout, int option){
         layout.removeAllViews();
         layout.setVisibility(View.VISIBLE);
-        List<Answer> list = answersList();
         if(option == 1){
             RadioGroup group = new RadioGroup(context);
             for (int i = 0; i < list.size(); i++) {

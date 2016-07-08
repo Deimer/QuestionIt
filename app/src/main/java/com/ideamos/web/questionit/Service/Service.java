@@ -86,18 +86,6 @@ public interface Service {
             Callback<JsonObject> cb
     );
 
-    @GET("/api/post/category/get")
-    void getCategories(
-            @Query("token") String token,
-            Callback<JsonObject> cb
-    );
-
-    @GET("/api/post/answer/type/get")
-    void getAnswerTypes(
-            @Query("token") String token,
-            Callback<JsonObject> cb
-    );
-
     @FormUrlEncoded
     @POST("/api/post/create")
     void createPost(
@@ -113,10 +101,24 @@ public interface Service {
 
 //endregion
 
+//region Configuracion
+
+    @GET("/api/configuration/category/get")
+    void getCategories(
+            Callback<JsonObject> cb
+    );
+
+    @GET("/api/configuration/answer/type/get")
+    void getAnswerTypes(
+            Callback<JsonObject> cb
+    );
+
+//endregion
+
 //region Answers
 
-    @GET("/api/post/answer/get/{post_id}")
-    void getUserAnswers(
+    @GET("/api/post/votes/get/{post_id}")
+    void getVotes(
             @Query("token") String token,
             @Path("post_id") Integer post_id,
             Callback<JsonObject> cb
@@ -126,6 +128,34 @@ public interface Service {
     void getAnswerOptions(
             @Query("token") String token,
             @Path("post_id") Integer post_id,
+            Callback<JsonObject> cb
+    );
+
+//endregion
+
+//region favorites, likes, etc
+
+    @FormUrlEncoded
+    @POST("/api/user/favorite/create")
+    void createFavorite(
+            @Query("token") String token,
+            @Field("id")int favorite_id,
+            @Field("post_id")int post_id,
+            @Field("user_id")int user_id,
+            @Field("active")boolean active,
+            Callback<JsonObject> cb
+    );
+
+    @GET("/api/user/favorite/get/{user_id}")
+    void getFavoritesUser(
+            @Query("token") String token,
+            @Path("user_id") Integer user_id,
+            Callback<JsonObject> cb
+    );
+
+    @GET("/api/user/favorite/get")
+    void getFavorites(
+            @Query("token") String token,
             Callback<JsonObject> cb
     );
 

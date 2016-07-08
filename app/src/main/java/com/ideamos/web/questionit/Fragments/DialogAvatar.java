@@ -3,9 +3,11 @@ package com.ideamos.web.questionit.Fragments;
 import com.ideamos.web.questionit.Controllers.PostController;
 import com.ideamos.web.questionit.Models.Post;
 import com.ideamos.web.questionit.R;
+import com.ideamos.web.questionit.views.DetailPost;
 import com.squareup.picasso.Picasso;
 
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -24,12 +26,12 @@ import butterknife.ButterKnife;
 public class DialogAvatar extends DialogFragment {
 
     private int id;
-    PostController postController;
+    private PostController postController;
 
     @Bind(R.id.lbl_name_user)TextView lbl_name_user;
     @Bind(R.id.img_avatar_user)ImageView img_avatar_user;
-    @Bind(R.id.img_question)ImageView icon_question;
-    @Bind(R.id.img_answer)ImageView icon_answer;
+    @Bind(R.id.icon_profile)ImageView icon_profile;
+    @Bind(R.id.icon_question)ImageView icon_question;
 
     public static DialogAvatar newInstance(int id){
         DialogAvatar dAvatar = new DialogAvatar();
@@ -53,6 +55,8 @@ public class DialogAvatar extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.fragment_dialog_avatar, container, false);
         ButterKnife.bind(this, v);
+        openPostActivity();
+        openProfileActivity();
         loadDatauser();
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         return v;
@@ -68,6 +72,30 @@ public class DialogAvatar extends DialogFragment {
                 .centerCrop()
                 .fit()
                 .into(img_avatar_user);
+    }
+
+    public void openPostActivity(){
+        icon_question.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+                Post post = postController.show(id);
+                Intent intent = new Intent(getActivity(), DetailPost.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("code", post.getCode());
+                getActivity().startActivity(intent);
+            }
+        });
+    }
+
+    public void openProfileActivity(){
+        icon_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+                System.out.println("Click en esta view");
+            }
+        });
     }
 
 }

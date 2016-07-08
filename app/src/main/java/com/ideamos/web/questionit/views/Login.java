@@ -23,14 +23,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
-import com.ideamos.web.questionit.Controllers.AnswerController;
-import com.ideamos.web.questionit.Controllers.CategoryController;
+import com.ideamos.web.questionit.Controllers.FavoriteController;
 import com.ideamos.web.questionit.Controllers.UserController;
 import com.ideamos.web.questionit.Helpers.DataOption;
 import com.ideamos.web.questionit.Helpers.SweetDialog;
 import com.ideamos.web.questionit.Helpers.Validate;
-import com.ideamos.web.questionit.Models.AnswerType;
-import com.ideamos.web.questionit.Models.Category;
+import com.ideamos.web.questionit.Models.Favorite;
 import com.ideamos.web.questionit.Models.SocialUser;
 import com.ideamos.web.questionit.Models.User;
 import com.ideamos.web.questionit.R;
@@ -50,8 +48,7 @@ public class Login extends AppCompatActivity {
     //Variables de entorno
     private Context context;
     private UserController userController;
-    private CategoryController categoryController;
-    private AnswerController answerController;
+    private FavoriteController favoriteController;
     private SweetDialog dialog;
     private Validate validate;
     private DataOption data;
@@ -76,8 +73,7 @@ public class Login extends AppCompatActivity {
     public void setupActivity(){
         context = this;
         userController = new UserController(context);
-        categoryController = new CategoryController(context);
-        answerController = new AnswerController(context);
+        favoriteController = new FavoriteController(context);
         dialog = new SweetDialog(context);
         validate = new Validate(context);
         data = new DataOption();
@@ -153,7 +149,6 @@ public class Login extends AppCompatActivity {
                     User user = new Gson().fromJson(jsonObject.get("user"), User.class);
                     user.setToken(token);
                     if(userController.create(user)){
-                        getCategories(token);
                         dialog.cancelarProgress();
                         next(user.getState());
                     }
@@ -195,8 +190,7 @@ public class Login extends AppCompatActivity {
                         User user = new Gson().fromJson(jsonObject.get("user"), User.class);
                         user.setToken(token);
                         if(userController.create(user)){
-                            getCategories(token);
-                            getAnswerTypes(token);
+                            getFavorites(token, user.getUser_id());
                             dialog.cancelarProgress();
                             next(user.getState());
                         }
@@ -225,68 +219,50 @@ public class Login extends AppCompatActivity {
         });
     }
 
-    public void getCategories(String token){
+    public void getFavorites(String token, int user_id){
         final String url = getString(R.string.url_con);
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(url)
                 .build();
         Service api = restAdapter.create(Service.class);
-        api.getCategories(token, new Callback<JsonObject>() {
+        api.getFavoritesUser(token, user_id, new Callback<JsonObject>() {
             @Override
             public void success(JsonObject jsonObject, Response response) {
                 boolean success = jsonObject.get("success").getAsBoolean();
-                if (success) {
-                    JsonArray array = jsonObject.get("categories").getAsJsonArray();
-                    for (int i = 0; i < array.size(); i++) {
-                        JsonObject json = array.get(i).getAsJsonObject();
-                        Category category = new Gson().fromJson(json, Category.class);
-                        categoryController.create(category);
-                    }
+                if(success){
+                    JsonArray array = jsonObject.get("favorites").getAsJsonArray();
+                    saveFavorites(array);
                 }
             }
+
             @Override
             public void failure(RetrofitError error) {
                 try {
                     Log.e("Error", "Se ha producido un error durante el proceso, intentarlo más tarde.");
-                    Log.e("Login(getCategories)", "Error: " + error.getBody().toString());
+                    Log.e("Timeline(getFavorites)", "Error: " + error.getBody().toString());
                 } catch (Exception ex) {
-                    Log.e("Login(getCategories)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
+                    Log.e("Timeline(getFavorites)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
                 }
             }
         });
     }
 
-    public void getAnswerTypes(String token){
-        final String url = getString(R.string.url_con);
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setEndpoint(url)
-                .build();
-        Service api = restAdapter.create(Service.class);
-        api.getAnswerTypes(token, new Callback<JsonObject>() {
-            @Override
-            public void success(JsonObject jsonObject, Response response) {
-                boolean success = jsonObject.get("success").getAsBoolean();
-                if (success) {
-                    JsonArray array = jsonObject.get("answer_types").getAsJsonArray();
-                    for (int i = 0; i < array.size(); i++) {
-                        JsonObject json = array.get(i).getAsJsonObject();
-                        AnswerType answerType = new Gson().fromJson(json, AnswerType.class);
-                        answerController.create(answerType);
-                    }
+    public boolean saveFavorites(JsonArray array){
+        boolean res = true;
+        try {
+            if(array.size() > 0){
+                for (int i = 0; i < array.size(); i++) {
+                    JsonObject json = array.get(i).getAsJsonObject();
+                    Favorite favorites = new Gson().fromJson(json, Favorite.class);
+                    favoriteController.create(favorites);
                 }
             }
-            @Override
-            public void failure(RetrofitError error) {
-                try {
-                    Log.e("Error", "Se ha producido un error durante el proceso, intentarlo más tarde.");
-                    Log.e("Login(getAnswerTypes)", "Error: " + error.getBody().toString());
-                } catch (Exception ex) {
-                    Log.e("Login(getAnswerTypes)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
-                }
-            }
-        });
+        } catch (JsonIOException ex) {
+            res = false;
+            Log.e("Timeline(saveFavorites)", "Error ex: " + ex.getMessage());
+        }
+        return res;
     }
 
 //Funciones de la app

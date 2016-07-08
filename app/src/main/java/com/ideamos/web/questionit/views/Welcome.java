@@ -11,26 +11,42 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.ideamos.web.questionit.Controllers.AnswerController;
+import com.ideamos.web.questionit.Controllers.CategoryController;
 import com.ideamos.web.questionit.Controllers.UserController;
+import com.ideamos.web.questionit.Models.AnswerType;
+import com.ideamos.web.questionit.Models.Category;
 import com.ideamos.web.questionit.R;
+import com.ideamos.web.questionit.Service.Service;
 import com.vstechlab.easyfonts.EasyFonts;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import xyz.hanks.library.SmallBang;
 
 public class Welcome extends AppCompatActivity {
 
     private Context context;
     private UserController userController;
+    private CategoryController categoryController;
+    private AnswerController answerController;
 
     @Bind(R.id.layout_logo)LinearLayout layout_logo;
+    @Bind(R.id.icon_logo)ImageView icon_logo;
     @Bind(R.id.lbl_title_app)TextView lbl_title;
 
     @Override
@@ -48,10 +64,13 @@ public class Welcome extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
         context = this;
         userController = new UserController(context);
+        categoryController = new CategoryController(context);
+        answerController = new AnswerController(context);
         initInstanceFacebook();
-        setupLogo();
-        moveLogo();
+        loadConfiguration();
         setupTitle();
+        setupLogo();
+        //moveLogo();
         next();
     }
 
@@ -59,37 +78,35 @@ public class Welcome extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                YoYo.with(Techniques.FlipInX)
-                        .duration(1000)
-                        .playOn(layout_logo);
-                layout_logo.setVisibility(View.VISIBLE);
+                YoYo.with(Techniques.Pulse)
+                        .duration(700)
+                        .playOn(icon_logo);
             }
-        }, 900);
+        }, 4000);
     }
 
-    public void moveLogo(){
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Animation animation = new TranslateAnimation(0,0,0,-300);
-                animation.setDuration(1000);
-                animation.setFillAfter(true);
-                layout_logo.startAnimation(animation);
-            }
-        }, 1800);
-    }
+    //public void moveLogo(){
+    //    new Handler().postDelayed(new Runnable() {
+    //        @Override
+    //        public void run() {
+    //            Animation animation = new TranslateAnimation(0,0,0,-300);
+    //            animation.setDuration(1000);
+    //            animation.setFillAfter(true);
+    //            layout_logo.startAnimation(animation);
+    //        }
+    //    }, 1500);
+    //}
 
     public void setupTitle(){
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                YoYo.with(Techniques.FadeIn )
-                        .duration(1000)
-                        .playOn(lbl_title);
                 lbl_title.setTypeface(EasyFonts.caviarDreams(context));
-                lbl_title.setVisibility(View.VISIBLE);
+                layout_logo.setVisibility(View.VISIBLE);
+                SmallBang smallBang = SmallBang.attach2Window((Welcome)context);
+                smallBang.bang(layout_logo);
             }
-        }, 2700);
+        }, 1500);
     }
 
     public void next(){
@@ -98,7 +115,7 @@ public class Welcome extends AppCompatActivity {
             public void run() {
                 setupSession();
             }
-        }, 6000);
+        }, 5000);
     }
 
     public void openLogin(){
@@ -151,6 +168,83 @@ public class Welcome extends AppCompatActivity {
         } catch (NoSuchAlgorithmException e) {
             Log.d("Welcome(NoSuchAlgorithmException): ", e.getMessage());
         }
+    }
+
+//Funciones de peteciones a la api
+
+    public void loadConfiguration(){
+        List<Category> categories = categoryController.list();
+        List<AnswerType> answerTypes = answerController.list();
+        if(categories.isEmpty()){
+            getCategories();
+        }
+        if(answerTypes.isEmpty()){
+            getAnswerTypes();
+        }
+    }
+
+    public void getCategories(){
+        final String url = getString(R.string.url_con);
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setEndpoint(url)
+                .build();
+        Service api = restAdapter.create(Service.class);
+        api.getCategories(new Callback<JsonObject>() {
+            @Override
+            public void success(JsonObject jsonObject, Response response) {
+                boolean success = jsonObject.get("success").getAsBoolean();
+                if (success) {
+                    JsonArray array = jsonObject.get("categories").getAsJsonArray();
+                    for (int i = 0; i < array.size(); i++) {
+                        JsonObject json = array.get(i).getAsJsonObject();
+                        Category category = new Gson().fromJson(json, Category.class);
+                        categoryController.create(category);
+                    }
+                }
+            }
+            @Override
+            public void failure(RetrofitError error) {
+                try {
+                    Log.e("Error", "Se ha producido un error durante el proceso, intentarlo más tarde.");
+                    Log.e("Login(getCategories)", "Error: " + error.getBody().toString());
+                } catch (Exception ex) {
+                    Log.e("Login(getCategories)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
+                }
+            }
+        });
+    }
+
+    public void getAnswerTypes(){
+        final String url = getString(R.string.url_con);
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setEndpoint(url)
+                .build();
+        Service api = restAdapter.create(Service.class);
+        api.getAnswerTypes(new Callback<JsonObject>() {
+            @Override
+            public void success(JsonObject jsonObject, Response response) {
+                boolean success = jsonObject.get("success").getAsBoolean();
+                if (success) {
+                    JsonArray array = jsonObject.get("answer_types").getAsJsonArray();
+                    for (int i = 0; i < array.size(); i++) {
+                        JsonObject json = array.get(i).getAsJsonObject();
+                        AnswerType answerType = new Gson().fromJson(json, AnswerType.class);
+                        answerController.create(answerType);
+                    }
+                }
+            }
+            @Override
+            public void failure(RetrofitError error) {
+                try {
+                    Log.e("Error", "Se ha producido un error durante el proceso, intentarlo más tarde.");
+                    Log.e("Login(getAnswerTypes)", "Error: " + error.getBody().toString());
+                } catch (Exception ex) {
+                    Log.e("Login(getAnswerTypes)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
+                }
+            }
+        });
     }
 
 }
