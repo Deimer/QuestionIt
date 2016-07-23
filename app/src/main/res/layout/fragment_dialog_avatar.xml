@@ -25,6 +25,7 @@
         android:layout_width="290dp"
         android:layout_height="360dp" />
     <LinearLayout
+        android:id="@+id/layout_bar"
         android:gravity="center"
         android:background="@color/colorAccent"
         android:layout_below="@+id/img_avatar_user"

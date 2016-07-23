@@ -120,8 +120,8 @@ public class Update extends AppCompatActivity
 
     @OnClick(R.id.fab_update)
     public void clickUpdate(){
-        String fname = txt_first_name.getText();
-        String lname = txt_last_name.getText();
+        String fname = txt_first_name.getText().trim();
+        String lname = txt_last_name.getText().trim();
         String bdate = lbl_birth_date.getText().toString();
         if (fname.equalsIgnoreCase("") || lname.equalsIgnoreCase("")) {
             dialog.dialogWarning("", "Antes de continuar, debes proporcionar tus credenciales.");

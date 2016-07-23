@@ -12,4 +12,6 @@
     tools:context="com.ideamos.web.questionit.views.Setting"
     tools:showIn="@layout/activity_setting">
 
+
+
 </RelativeLayout>

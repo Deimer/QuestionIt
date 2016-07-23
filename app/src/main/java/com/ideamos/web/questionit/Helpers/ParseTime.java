@@ -45,6 +45,24 @@ public class ParseTime {
         return res;
     }
 
+    public String toTimeEasy(String dpost){
+        String res = "";
+        try {
+            String pattern = "yyyy-MM-dd HH:mm:ss";
+            Date date = new SimpleDateFormat(pattern,Locale.getDefault()).parse(dpost);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            res = calendar.get(Calendar.DAY_OF_MONTH) + "/"
+                    + calendar.get(Calendar.MONTH) + "/"
+                    + calendar.get(Calendar.YEAR) + ", "
+                    + calendar.get(Calendar.HOUR_OF_DAY) + ":"
+                    + calendar.get(Calendar.MINUTE);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
     public String intMonth(int number){
         String month;
         switch (number) {

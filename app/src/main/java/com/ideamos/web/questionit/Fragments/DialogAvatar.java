@@ -5,7 +5,6 @@ import com.ideamos.web.questionit.Models.Post;
 import com.ideamos.web.questionit.R;
 import com.ideamos.web.questionit.views.DetailPost;
 import com.squareup.picasso.Picasso;
-
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +15,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -69,8 +67,9 @@ public class DialogAvatar extends DialogFragment {
         lbl_name_user.setText(name_user);
         Picasso.with(getActivity())
                 .load(avatar)
-                .centerCrop()
-                .fit()
+                .centerCrop().fit()
+                .placeholder(R.drawable.com_facebook_profile_picture_blank_square)
+                .error(R.drawable.com_facebook_profile_picture_blank_square)
                 .into(img_avatar_user);
     }
 

@@ -2,11 +2,16 @@ package com.ideamos.web.questionit.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.ideamos.web.questionit.Helpers.ParseTime;
 import com.ideamos.web.questionit.Models.UserAnswer;
 import com.ideamos.web.questionit.R;
 import com.ideamos.web.questionit.views.MyProfile;
@@ -24,10 +29,14 @@ public class RecyclerAnswerPost extends RecyclerView.Adapter<RecyclerAnswerPost.
 
     private Context context;
     private List<UserAnswer> answers_post = new ArrayList<>();
-    public RecyclerAnswerPost(Context context, List<UserAnswer> answers_post){
+    private int user_id;
+
+    public RecyclerAnswerPost(Context context, List<UserAnswer> answers_post, int user_id){
         this.context = context;
         this.answers_post = answers_post;
+        this.user_id = user_id;
     }
+    private ParseTime parseTime = new ParseTime(context);
 
     @Override
     public AdapterView onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -37,6 +46,12 @@ public class RecyclerAnswerPost extends RecyclerView.Adapter<RecyclerAnswerPost.
 
     @Override
     public void onBindViewHolder(final AdapterView holder, int position) {
+        if(user_id == answers_post.get(position).getUser_id()) {
+            holder.layout_row_answer.setBackgroundColor(Color.parseColor("#ffdfdf"));
+            holder.lbl_answer_vote.setTypeface(holder.lbl_answer_vote.getTypeface(), Typeface.BOLD_ITALIC);
+        }
+        System.out.println("user_id post: " + user_id);
+        System.out.println("user_id answer: " + answers_post.get(position).getUser_id());
         String avatar = answers_post.get(position).getAvatar();
         String full_name = answers_post.get(position).getUser_fullname();
         String answer = answers_post.get(position).getAnswer();
@@ -48,8 +63,8 @@ public class RecyclerAnswerPost extends RecyclerView.Adapter<RecyclerAnswerPost.
                 .error(R.drawable.com_facebook_profile_picture_blank_square)
                 .into(holder.avatar_user_answer);
         holder.lbl_fullname_asnwer.setText(full_name);
-        holder.lbl_user_answer.setText(answer);
-        holder.lbl_date_answer.setText(date);
+        holder.lbl_answer_vote.setText("Respondío: " + answer);
+        holder.lbl_date_answer.setText(parseTime.toTimeEasy(date));
     }
 
     @Override
@@ -58,9 +73,10 @@ public class RecyclerAnswerPost extends RecyclerView.Adapter<RecyclerAnswerPost.
     }
 
     public class AdapterView extends RecyclerView.ViewHolder implements View.OnClickListener {
+        @Bind(R.id.layout_row_answer)LinearLayout layout_row_answer;
         @Bind(R.id.avatar_user_answer)CircleImageView avatar_user_answer;
         @Bind(R.id.lbl_fullname_asnwer)TextView lbl_fullname_asnwer;
-        @Bind(R.id.lbl_user_answer)TextView lbl_user_answer;
+        @Bind(R.id.lbl_answer_vote)TextView lbl_answer_vote;
         @Bind(R.id.lbl_date_answer)TextView lbl_date_answer;
         public AdapterView(View itemView){
             super(itemView);

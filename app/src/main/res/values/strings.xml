@@ -5,7 +5,7 @@
     <string name="title_activity_login">Login</string>
 
     <!-- Cadenas de conexion api -->
-    <string name="url_con">http://192.168.0.198:80</string>
+    <string name="url_con">http://192.168.0.192:80</string>
     <!-- Cadena conexion facebook -->
     <string name="facebook_app_id">1643742285950373</string>
     <string name="provider_social">facebook</string>
@@ -17,14 +17,16 @@
     <string name="login_or_login_social">  O  </string>
     <string name="login_forgot_password">¿Olvidates tu contraseña?</string>
     <string name="login_register_with_us">¿No tienes cuenta?\n<u>Registrate en Question It</u></string>
-    <string name="loign_with_facebook">Logueate con Facebook</string>
+    <string name="loign_with_facebook">Ingresa con Facebook</string>
 
     <!-- Pantalla de registro -->
     <string name="title_register">Registro</string>
     <string name="register_email">Correo</string>
     <string name="register_username">Usuario</string>
     <string name="register_password">Contraseña</string>
+    <string name="register_question">Registrate en Question It</string>
     <string name="register_sing_up">Registrate con Facebook</string>
+    <string name="register_login">¿Ya tienes cuenta?\n<u>Inicia sesión en Question It</u></string>
 
     <!-- Pantalla de actualizacion -->
     <string name="title_activity_update_information">Actualizar Información</string>
@@ -45,7 +47,7 @@
     <string name="action_comments">Comentarios y Sugerencias</string>
 
     <!-- Pantalla de timeline -->
-    <string name="title_activity_time_line">TimeLine</string>
+    <string name="title_activity_time_line">Question It</string>
     <string name="texto">Si éste XML es usado como el layout de una Activity, con los campos
         delTextView establecidos a valores significativos.</string>
     <string name="post_username">Username</string>
@@ -71,11 +73,30 @@
     <string name="createpost_preview">Vista Previa</string>
     <string name="createpost_publish">Publicar</string>
 
+    <!-- Pantalla del post y detalles -->
+    <string name="post_author_answer">Respuesta del autor</string>
+    <string name="post_number_comments">0 Comentarios</string>
+    <string name="post_you_comment">Escribe tu comentario</string>
+
     <!-- Navigation drawer -->
     <string name="dialog_answer_cancel">Cancelar</string>
     <string name="dialog_answer_accept">Responder</string>
 
     <string name="number_bar">0</string>
+    <string name="answers_in_post">Respuestas</string>
+
+    <!-- Pantalla perfil del usuario -->
+    <string name="profile_username">Tu usuario</string>
+    <string name="profile_data">Tus Datos</string>
+    <string name="profile_followers">Seguidores</string>
+    <string name="profile_followed">Seguidos</string>
+    <string name="profile_favorites">Favoritos</string>
+    <string name="profile_posts">Preguntas</string>
+    <string name="profile_reactions">Reacciones</string>
+
+    <string name="title_activity_setting">Setting</string>
+    <string name="title_activity_create_post">CreatePost</string>
+    <string name="title_activity_question">Question</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -165,6 +186,4 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
-    <string name="title_activity_setting">Setting</string>
-    <string name="title_activity_create_post">CreatePost</string>
 </resources>

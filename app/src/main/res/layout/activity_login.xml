@@ -13,8 +13,15 @@
         android:id="@+id/layout_toolbar"
         android:layout_alignParentTop="true"
         android:orientation="horizontal"
+        android:elevation="4dp"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
+        <ImageView
+            android:id="@+id/icon_back"
+            android:layout_gravity="center"
+            android:src="@mipmap/ic_back_white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/lbl_title"
             android:text="@string/title_login"
@@ -25,62 +32,74 @@
             android:layout_weight=".80"
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
+        <ImageView
+            android:visibility="invisible"
+            android:src="@mipmap/ic_back_white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
     <LinearLayout
+        android:layout_below="@+id/layout_toolbar"
         android:orientation="vertical"
-        android:paddingRight="30dp"
-        android:paddingLeft="30dp"
-        android:paddingBottom="60dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
-        <com.github.florent37.materialtextfield.MaterialTextField
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:mtf_image="@drawable/email_circle_dark"
-            app:mtf_openKeyboardOnFocus="true"
-            app:mtf_cardCollapsedHeight="4dp"
-            app:mtf_labelColor="@color/icons">
-            <EditText
-                android:id="@+id/txt_email"
-                android:inputType="textEmailAddress"
-                android:hint="@string/login_email"
-                android:textSize="22sp"
-                android:textColor="@color/colorPrimary"
-                android:textColorHint="@color/colorPressed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.github.florent37.materialtextfield.MaterialTextField>
-        <com.github.florent37.materialtextfield.MaterialTextField
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:mtf_image="@drawable/pass_circle_dark"
-            app:mtf_openKeyboardOnFocus="true"
-            app:mtf_cardCollapsedHeight="4dp"
-            app:mtf_labelColor="@color/icons">
-            <EditText
-                android:id="@+id/txt_password"
-                android:inputType="textPassword"
-                android:hint="@string/login_password"
-                android:textSize="22sp"
-                android:textColor="@color/colorPrimary"
-                android:textColorHint="@color/colorPressed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.github.florent37.materialtextfield.MaterialTextField>
-        <at.markushi.ui.CircleButton
-            android:id="@+id/but_login"
-            android:layout_marginTop="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/arrow_next_dark"
-            app:cb_color="@color/icons"
-            app:cb_pressedRingWidth="10dp"/>
         <LinearLayout
+            android:orientation="vertical"
+            android:paddingBottom="30dp"
+            android:paddingRight="30dp"
+            android:paddingLeft="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.github.florent37.materialtextfield.MaterialTextField
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:mtf_image="@drawable/email_circle_dark"
+                app:mtf_openKeyboardOnFocus="true"
+                app:mtf_cardCollapsedHeight="4dp"
+                app:mtf_labelColor="@color/icons">
+                <EditText
+                    android:id="@+id/txt_email"
+                    android:inputType="textEmailAddress"
+                    android:hint="@string/login_email"
+                    android:textSize="22sp"
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPressed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.github.florent37.materialtextfield.MaterialTextField>
+            <com.github.florent37.materialtextfield.MaterialTextField
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:mtf_image="@drawable/pass_circle_dark"
+                app:mtf_openKeyboardOnFocus="true"
+                app:mtf_cardCollapsedHeight="4dp"
+                app:mtf_labelColor="@color/icons">
+                <EditText
+                    android:id="@+id/txt_password"
+                    android:inputType="textPassword"
+                    android:hint="@string/login_password"
+                    android:textSize="22sp"
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPressed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.github.florent37.materialtextfield.MaterialTextField>
+            <at.markushi.ui.CircleButton
+                android:id="@+id/but_login"
+                android:layout_marginTop="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/arrow_next_dark"
+                app:cb_color="@color/icons"
+                app:cb_pressedRingWidth="10dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="20dp"
             android:layout_marginRight="40dp"
             android:layout_marginLeft="40dp"
             android:orientation="horizontal"
@@ -112,40 +131,16 @@
         <Button
             android:id="@+id/but_login_facebook"
             android:text="@string/loign_with_facebook"
-            android:textSize="19sp"
+            android:layout_gravity="center"
+            android:textSize="20sp"
             android:textColor="@color/icons"
             android:textAllCaps="false"
-            android:layout_gravity="center"
-            android:background="@drawable/but_pressed"
-            android:drawableLeft="@drawable/ic_facebook"
-            android:drawablePadding="-10sp"
-            android:layout_marginTop="10dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:layout_width="270dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/but_pressed_facebook"
+            android:drawableLeft="@drawable/ic_facebook_mini"
+            android:layout_width="300dp"
             android:layout_height="match_parent" />
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_alignParentBottom="true"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="60dp">
-        <View
-            android:background="@color/iconsAccent"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"/>
-        <Button
-            android:id="@+id/lbl_register_with_us"
-            android:text="@string/login_register_with_us"
-            android:textSize="18sp"
-            android:textColor="@color/icons"
-            android:textAllCaps="false"
-            android:background="@drawable/but_pressed_background"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="50dp" />
     </LinearLayout>
     <LinearLayout
         android:id="@+id/layout_social"

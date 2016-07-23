@@ -20,10 +20,12 @@ public class UserAnswer {
     private Integer user_answer_id;
     @DatabaseField(canBeNull = false)
     private Integer user_id;
+    @SerializedName("fullname")
     @DatabaseField(canBeNull = false)
     private String user_fullname;
     @DatabaseField(canBeNull = true)
     private String avatar;
+    @SerializedName("description")
     @DatabaseField(canBeNull = true)
     private String answer;
     @DatabaseField(canBeNull = true)

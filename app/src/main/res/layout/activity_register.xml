@@ -14,15 +14,10 @@
         android:id="@+id/layout_toolbar"
         android:layout_alignParentTop="true"
         android:orientation="horizontal"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
-        <ImageView
-            android:id="@+id/icon_back"
-            android:contentDescription="@string/app_name"
-            android:layout_gravity="center"
-            android:src="@mipmap/ic_back_white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/lbl_title"
             android:text="@string/title_register"
@@ -32,12 +27,6 @@
             android:gravity="center"
             android:layout_weight=".70"
             android:layout_width="0dp"
-            android:layout_height="wrap_content" />
-        <ImageView
-            android:visibility="invisible"
-            android:contentDescription="@string/app_name"
-            android:src="@mipmap/ic_back_white"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
     <LinearLayout
@@ -107,83 +96,99 @@
                     android:layout_height="wrap_content" />
             </com.github.florent37.materialtextfield.MaterialTextField>
         </LinearLayout>
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <at.markushi.ui.CircleButton
-                android:id="@+id/but_register"
-                android:layout_marginTop="20dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/arrow_next_dark"
-                app:cb_color="@color/icons"
-                app:cb_pressedRingWidth="10dp"/>
-        </LinearLayout>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/layout_footer"
+        android:orientation="vertical"
         android:layout_below="@+id/layout_body"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginLeft="40dp"
-        android:orientation="horizontal"
-        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
         android:gravity="center"
+        android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <View
-            android:background="@color/iconsAccent"
-            android:layout_weight=".30"
-            android:layout_width="0dp"
-            android:layout_height="2dp"/>
-        <TextView
-            android:id="@+id/lbl_or"
-            android:text="@string/login_or_login_social"
-            android:textSize="18sp"
-            android:textColor="@color/icons"
-            android:layout_gravity="center"
+        <Button
+            android:id="@+id/but_register"
+            android:text="@string/register_question"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimary"
+            android:textAllCaps="false"
+            android:paddingLeft="2dp"
+            android:drawableLeft="@drawable/ic_icon_mini"
+            android:drawablePadding="-10dp"
+            android:background="@drawable/but_background_white"
+            android:layout_width="300dp"
+            android:layout_height="match_parent" />
+        <LinearLayout
+            android:id="@+id/layout_separator"
             android:gravity="center"
-            android:layout_weight=".08"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
-        <View
-            android:background="@color/iconsAccent"
-            android:layout_weight=".30"
-            android:layout_width="0dp"
-            android:layout_height="2dp"/>
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
+            android:layout_margin="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <View
+                android:layout_weight=".45"
+                android:background="@color/icons"
+                android:layout_width="0dp"
+                android:layout_height="1dp"/>
+            <TextView
+                android:text="@string/login_or_login_social"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <View
+                android:layout_weight=".45"
+                android:background="@color/icons"
+                android:layout_width="0dp"
+                android:layout_height="1dp"/>
+        </LinearLayout>
         <Button
             android:id="@+id/but_register_facebook"
             android:text="@string/register_sing_up"
             android:textSize="20sp"
             android:textColor="@color/icons"
             android:textAllCaps="false"
-            android:background="@drawable/but_pressed"
-            android:drawableLeft="@drawable/ic_facebook"
-            android:drawablePadding="-10sp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/but_pressed_facebook"
+            android:drawableLeft="@drawable/ic_facebook_mini"
             android:layout_width="300dp"
             android:layout_height="match_parent" />
     </LinearLayout>
     <LinearLayout
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+        <View
+            android:background="@color/iconsAccent"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+        <Button
+            android:id="@+id/but_register_with_us"
+            android:text="@string/register_login"
+            android:textSize="18sp"
+            android:textColor="@color/icons"
+            android:textAllCaps="false"
+            android:background="@drawable/but_pressed_background"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+    </LinearLayout>
+    <LinearLayout
         android:id="@+id/layout_social"
+        android:layout_below="@+id/layout_footer"
         android:visibility="gone"
         android:orientation="vertical"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <com.facebook.login.widget.LoginButton
             android:id="@+id/register_button_facebook"
             android:layout_width="wrap_content"
+            android:layout_gravity="center"
             android:layout_height="wrap_content"/>
     </LinearLayout>
 

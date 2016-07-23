@@ -6,9 +6,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ideamos.web.questionit.Models.SocialUser;
 import com.ideamos.web.questionit.Models.User;
+import com.ideamos.web.questionit.Models.UserAnswer;
 import com.ideamos.web.questionit.R;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Creado por Deimer, fecha: 5/06/2016.
@@ -20,6 +22,13 @@ public class DataOption {
         scopes.add("public_profile");
         scopes.add("email");
         scopes.add("user_birthday");
+        return scopes;
+    }
+
+    public List<String> titleTabs(){
+        ArrayList<String> scopes = new ArrayList<>();
+        scopes.add("Respuestas");
+        scopes.add("Comentarios");
         return scopes;
     }
 
@@ -45,6 +54,28 @@ public class DataOption {
         user.setLast_name(json.get("last_name").getAsString());
         user.setBirth_date(replace(json.get("birthday").getAsString(), "/", "-"));
         return user;
+    }
+
+    public UserAnswer jsonToUserAnswer(JsonObject json){
+        UserAnswer answers = new UserAnswer();
+        answers.setUser_answer_id(json.get("id").getAsInt());
+        answers.setUser_id(json.get("user_id").getAsInt());
+        answers.setUser_fullname(json.get("fullname").getAsString());
+        answers.setAvatar(validateJsonItem(json.get("avatar").getAsString()));
+        answers.setAnswer(json.get("description").getAsString());
+        answers.setCreated_at(json.get("created_at").getAsString());
+        answers.setActive(json.get("active").getAsBoolean());
+        return answers;
+    }
+
+    public String validateJsonItem(String data){
+        String avatar;
+        if(data != null){
+            avatar = data;
+        } else {
+            avatar = "no data";
+        }
+        return avatar;
     }
 
     public SocialUser jsonToSocialUser(JsonObject json, LoginResult loginResult, Context context){

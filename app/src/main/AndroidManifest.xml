@@ -89,10 +89,10 @@
         <!-- Pantalla creacion del post -->
         <activity
             android:name=".views.CreatePost"
+            android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_create_post"
-            android:windowSoftInputMode="stateHidden"
             android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|screenSize">
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

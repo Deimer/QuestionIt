@@ -28,12 +28,10 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.ideamos.web.questionit.Adapters.Recycler;
 import com.ideamos.web.questionit.Adapters.SpaceItemView;
-import com.ideamos.web.questionit.Controllers.FavoriteController;
 import com.ideamos.web.questionit.Controllers.PostController;
 import com.ideamos.web.questionit.Controllers.UserController;
 import com.ideamos.web.questionit.Helpers.SweetDialog;
 import com.ideamos.web.questionit.Helpers.ToastCustomer;
-import com.ideamos.web.questionit.Models.Favorite;
 import com.ideamos.web.questionit.Models.Post;
 import com.ideamos.web.questionit.Models.User;
 import com.ideamos.web.questionit.R;
@@ -108,6 +106,18 @@ public class Timeline extends AppCompatActivity
                 R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close
         );
+        toggle.setDrawerIndicatorEnabled(false);
+        toggle.setHomeAsUpIndicator(R.drawable.ic_icon);
+        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (drawer_layout.isDrawerVisible(GravityCompat.START)) {
+                    drawer_layout.closeDrawer(GravityCompat.START);
+                } else {
+                    drawer_layout.openDrawer(GravityCompat.START);
+                }
+            }
+        });
         drawer_layout.addDrawerListener(toggle);
         toggle.syncState();
         nav_view.setNavigationItemSelectedListener(this);
@@ -133,6 +143,9 @@ public class Timeline extends AppCompatActivity
         int id = item.getItemId();
         if (id == R.id.action_home) {
             System.out.println("Home");
+            Intent profile = new Intent(Timeline.this, MyProfile.class);
+            startActivity(profile);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         } else if (id == R.id.action_settings) {
             System.out.println("Settings");
         } else if (id == R.id.action_logout) {
@@ -155,12 +168,14 @@ public class Timeline extends AppCompatActivity
     }
 
     public void setupRecycler(){
+        recycler.setHasFixedSize(true);
         List<Post> posts = postController.list();
         Recycler adapter = new Recycler(context, posts);
         recycler.setLayoutManager(
                 new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
         );
         recycler.setAdapter(adapter);
+        recycler.setHasFixedSize(true);
         SpaceItemView space = new SpaceItemView(1);
         recycler.addItemDecoration(space);
     }
@@ -217,10 +232,11 @@ public class Timeline extends AppCompatActivity
             public void success(JsonObject jsonObject, Response response) {
                 boolean success = jsonObject.get("success").getAsBoolean();
                 if (success) {
-                    JsonArray array = jsonObject.get("posts").getAsJsonArray();
+                    JsonArray posts = jsonObject.get("posts").getAsJsonArray();
+                    JsonArray votes = jsonObject.get("votes").getAsJsonArray();
                     String new_token = jsonObject.get("new_token").getAsString();
                     if(userController.changeToken(new_token)){
-                        savePosts(array, refresh);
+                        savePosts(posts, votes, refresh);
                     }
                 } else {
                     if(refresh){swipe_refresh.setRefreshing(false);}
@@ -239,13 +255,18 @@ public class Timeline extends AppCompatActivity
         });
     }
 
-    public boolean savePosts(JsonArray array, boolean refresh){
+    public boolean savePosts(JsonArray posts, JsonArray votes, boolean refresh){
         boolean res = true;
         try {
-            for (int i = 0; i < array.size(); i++) {
-                JsonObject json = array.get(i).getAsJsonObject();
-                Post post = new Gson().fromJson(json, Post.class);
+            for (int i = 0; i < posts.size(); i++) {
+                JsonObject jsonPosts = posts.get(i).getAsJsonObject();
+                JsonObject jsonVotes = votes.get(i).getAsJsonObject();
+                Post post = new Gson().fromJson(jsonPosts, Post.class);
+                if(post.getPost_id() == jsonVotes.get("post_id").getAsInt()){
+                    post.setVotes(jsonVotes.get("votes").getAsInt());
+                }
                 if(!postController.ifExist(post)){
+                    System.out.println(post.toString());
                     Log.e(
                             "Timeline(savePosts)",
                             "Error save: Error al guardar post en la iteración " + i

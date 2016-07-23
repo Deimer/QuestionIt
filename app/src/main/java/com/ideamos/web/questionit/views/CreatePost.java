@@ -461,6 +461,7 @@ public class CreatePost extends AppCompatActivity {
         Picasso.with(context)
                 .load(url_avatar)
                 .centerCrop().fit()
+                .placeholder(R.drawable.com_facebook_profile_picture_blank_square)
                 .error(R.drawable.com_facebook_profile_picture_blank_square)
                 .into(avatar);
     }

@@ -87,12 +87,26 @@ public class PostController {
         return post;
     }
 
+    //Funcion que permite mostrar toda la informacion de un post del usuario
+    public Post search(int post_id){
+        Post post;
+        try {
+            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
+            RuntimeExceptionDao<Post, Integer> postDao = helper.getPostRuntimeDao();
+            post = postDao.queryBuilder().where().eq("post_id", post_id).queryForFirst();
+        } catch (Exception ex) {
+            post = null;
+            Log.e("PostController(show)", "Error: " + ex.getMessage());
+        }
+        return post;
+    }
+
     public List<Post> list(){
         List<Post> list;
         try {
             helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
             RuntimeExceptionDao<Post, Integer> postDao = helper.getPostRuntimeDao();
-            list = postDao.queryForAll();
+            list = postDao.queryBuilder().orderBy("created_at", false).query();
         } catch (Exception ex) {
             list = null;
             Log.e("PostController(list)", "Error: " + ex.getMessage());

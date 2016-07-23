@@ -19,12 +19,14 @@ public class Post {
     @DatabaseField(canBeNull = false)
     private int post_id;
     @DatabaseField(canBeNull = false)
+    private int user_id;
+    @DatabaseField(canBeNull = false)
     private String question;
     @DatabaseField(canBeNull = false)
     private String username;
     @DatabaseField(canBeNull = false)
     private String full_name;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(canBeNull = true)
     private String avatar;
     @DatabaseField(canBeNull = false)
     private String created_at;
@@ -34,12 +36,17 @@ public class Post {
     private int answer_type;
     @DatabaseField(canBeNull = false)
     private boolean active;
+    @DatabaseField(canBeNull = true)
+    private int votes;
 
     public Post() {}
 
-    public Post(int post_id, String question, String username, String full_name, String avatar,
-                String created_at, int category_id, int answer_type, boolean active) {
+    public Post(int post_id, int user_id, String question,
+                String username, String full_name, String avatar,
+                String created_at, int category_id, int answer_type,
+                boolean active, int votes) {
         this.post_id = post_id;
+        this.user_id = user_id;
         this.question = question;
         this.username = username;
         this.full_name = full_name;
@@ -48,6 +55,7 @@ public class Post {
         this.category_id = category_id;
         this.answer_type = answer_type;
         this.active = active;
+        this.votes = votes;
     }
 
 //region Getters
@@ -56,6 +64,9 @@ public class Post {
     }
     public int getPost_id() {
         return post_id;
+    }
+    public int getUser_id() {
+        return user_id;
     }
     public String getQuestion() {
         return question;
@@ -81,6 +92,9 @@ public class Post {
     public boolean isActive() {
         return active;
     }
+    public int getVotes() {
+        return votes;
+    }
 //endregion
 
 //region Setters
@@ -89,6 +103,9 @@ public class Post {
     }
     public void setPost_id(int post_id) {
         this.post_id = post_id;
+    }
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
     public void setQuestion(String question) {
         this.question = question;
@@ -114,13 +131,18 @@ public class Post {
     public void setActive(boolean active) {
         this.active = active;
     }
+    public void setVotes(int votes) {
+        this.votes = votes;
+    }
 //endregion
+
 
     @Override
     public String toString() {
         return "Post{" +
             "code=" + code +
             ", post_id=" + post_id +
+            ", user_id=" + user_id +
             ", question='" + question + '\'' +
             ", username='" + username + '\'' +
             ", full_name='" + full_name + '\'' +
@@ -129,6 +151,8 @@ public class Post {
             ", category_id=" + category_id +
             ", answer_type=" + answer_type +
             ", active=" + active +
+            ", votes=" + votes +
         '}';
     }
+
 }

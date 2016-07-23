@@ -117,6 +117,16 @@ public interface Service {
 
 //region Answers
 
+    @FormUrlEncoded
+    @POST("/api/post/votes/create")
+    void sendVote(
+        @Query("token") String token,
+        @Field("answer_id")int answer_id,
+        @Field("user_id")int user_id,
+        @Field("active")boolean active,
+        Callback<JsonObject> cb
+    );
+
     @GET("/api/post/votes/get/{post_id}")
     void getVotes(
             @Query("token") String token,
@@ -124,10 +134,11 @@ public interface Service {
             Callback<JsonObject> cb
     );
 
-    @GET("/api/post/answer/options/get/{post_id}")
+    @GET("/api/post/answer/options/get/{post_id}/{user_id}")
     void getAnswerOptions(
             @Query("token") String token,
             @Path("post_id") Integer post_id,
+            @Path("user_id") Integer user_id,
             Callback<JsonObject> cb
     );
 
@@ -156,6 +167,18 @@ public interface Service {
     @GET("/api/user/favorite/get")
     void getFavorites(
             @Query("token") String token,
+            Callback<JsonObject> cb
+    );
+
+    @FormUrlEncoded
+    @POST("/api/user/reaction/create")
+    void createReaction(
+            @Query("token") String token,
+            @Field("id")int user_reaction_id,
+            @Field("post_id")int post_id,
+            @Field("user_id")int user_id,
+            @Field("reaction_id")int reaction_id,
+            @Field("active")boolean active,
             Callback<JsonObject> cb
     );
 

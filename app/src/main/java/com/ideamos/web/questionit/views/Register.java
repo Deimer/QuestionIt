@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -126,6 +125,8 @@ public class Register extends Activity {
                 .setEndpoint(url)
                 .build();
         Service api = restAdapter.create(Service.class);
+        System.out.println("user: " + user.toString());
+        System.out.println("social: " + social.toString());
         api.socialRegister(
                 //user
                 user.getUsername(), user.getEmail(), user.getUsername(), user.getFirst_name(),
@@ -193,6 +194,7 @@ public class Register extends Activity {
                                 @Override
                                 public void onCompleted(JSONObject object, GraphResponse response) {
                                     JsonObject json = data.convertToJsonGson(object);
+                                    System.out.println(json.toString());
                                     User user = data.jsonToUser(json);
                                     SocialUser social = data.jsonToSocialUser(json, loginResult, context);
                                     System.out.println("User: " + user.toString());
@@ -202,7 +204,7 @@ public class Register extends Activity {
                             }
                     );
                     Bundle parameters = new Bundle();
-                    parameters.putString("fields", "id,name,email,gender,birthday,picture.type(large),first_name,last_name");
+                    parameters.putString("fields", "id,name,email,gender,birthday,picture.width(500).height(500),first_name,last_name");
                     request.setParameters(parameters);
                     request.executeAsync();
                 }
@@ -250,6 +252,7 @@ public class Register extends Activity {
                             Intent login = new Intent(Register.this, Login.class);
                             login.putExtra("email", email);
                             startActivity(login);
+                            finish();
                         }
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         finish();
@@ -281,24 +284,12 @@ public class Register extends Activity {
         }
     }
 
-    @OnClick(R.id.icon_back)
-    public void onClickBack(){
-        Intent login = new Intent(Register.this, Login.class);
-        startActivity(login);
+    @OnClick(R.id.but_register_with_us)
+    public void clickLogin(){
+        Intent register = new Intent(Register.this, Login.class);
+        startActivity(register);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event){
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_BACK:
-                onClickBack();
-                return true;
-            default:
-                break;
-        }
-        return super.onKeyDown(keyCode, event);
     }
 
 }

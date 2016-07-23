@@ -1,17 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_dark"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.ideamos.web.questionit.views.MyProfile"
     tools:showIn="@layout/activity_my_profile">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:text="@string/large_text" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:background="@color/icons"
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+            <TextView
+                android:id="@+id/lbl_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/primary_text"
+                android:textSize="26sp"
+                android:layout_margin="@dimen/text_margin"
+                android:text="@string/profile_username" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.CardView
+                app:cardCornerRadius="4dp"
+                app:cardElevation="4dp"
+                android:background="@color/icons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:padding="10dp"
+                    android:orientation="vertical"
+                    android:paddingBottom="12dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:paddingRight="8dp"
+                        android:paddingLeft="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_weight=".33"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:id="@+id/lbl_number_followers"
+                                    android:layout_gravity="center"
+                                    android:text="@string/number_bar"
+                                    android:textColor="@color/primary_text"
+                                    android:textSize="29sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+                                <TextView
+                                    android:layout_gravity="center"
+                                    android:text="@string/profile_followers"
+                                    android:textSize="19sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+                            </LinearLayout>
+                            <View
+                                android:background="@color/separator"
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent" />
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_weight=".33"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:id="@+id/lbl_number_followed"
+                                    android:layout_gravity="center"
+                                    android:text="@string/number_bar"
+                                    android:textColor="@color/primary_text"
+                                    android:textSize="29sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                                <TextView
+                                    android:layout_gravity="center"
+                                    android:text="@string/profile_followed"
+                                    android:textSize="19sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+                            </LinearLayout>
+                            <View
+                                android:background="@color/separator"
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent" />
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_weight=".33"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:id="@+id/lbl_number_reactions"
+                                    android:layout_gravity="center"
+                                    android:text="@string/number_bar"
+                                    android:textColor="@color/primary_text"
+                                    android:textSize="29sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                                <TextView
+                                    android:layout_gravity="center"
+                                    android:text="@string/profile_reactions"
+                                    android:textSize="19sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+                            </LinearLayout>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_weight=".50"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:id="@+id/lbl_number_posts"
+                                    android:layout_gravity="center"
+                                    android:text="@string/number_bar"
+                                    android:textColor="@color/primary_text"
+                                    android:textSize="29sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+                                <TextView
+                                    android:layout_gravity="center"
+                                    android:text="@string/profile_posts"
+                                    android:textSize="19sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+                            </LinearLayout>
+                            <View
+                                android:background="@color/separator"
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent" />
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_weight=".50"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:id="@+id/lbl_number_shopping"
+                                    android:layout_gravity="center"
+                                    android:text="@string/number_bar"
+                                    android:textColor="@color/primary_text"
+                                    android:textSize="29sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+                                <TextView
+                                    android:layout_gravity="center"
+                                    android:text="@string/profile_favorites"
+                                    android:textSize="19sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+    </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

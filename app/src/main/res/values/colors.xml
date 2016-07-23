@@ -6,6 +6,7 @@
     <color name="colorPrimaryLucid">#affc440a</color>
     <color name="colorTransparent">#00ffffff</color>
     <color name="colorPressed">#ffdfdf</color>
+    <color name="accentPressed">#f0cdff</color>
     <color name="colorAccent">#7B1FA2</color>
     <color name="colorAccentLight">#987b1fa2</color>
     <color name="primary_text">#212121</color>
@@ -13,6 +14,8 @@
     <color name="secondary_text">#727272</color>
     <color name="icons">#FFFFFF</color>
     <color name="iconsAccent">#7dffffff</color>
+    <color name="background_dark">#4dd1d1d1</color>
     <color name="divider">#B6B6B6</color>
+    <color name="separator">#76b6b6b6</color>
     <color name="shadow">#81000000</color>
 </resources>

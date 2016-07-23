@@ -85,18 +85,6 @@ public class Welcome extends AppCompatActivity {
         }, 4000);
     }
 
-    //public void moveLogo(){
-    //    new Handler().postDelayed(new Runnable() {
-    //        @Override
-    //        public void run() {
-    //            Animation animation = new TranslateAnimation(0,0,0,-300);
-    //            animation.setDuration(1000);
-    //            animation.setFillAfter(true);
-    //            layout_logo.startAnimation(animation);
-    //        }
-    //    }, 1500);
-    //}
-
     public void setupTitle(){
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -119,8 +107,8 @@ public class Welcome extends AppCompatActivity {
     }
 
     public void openLogin(){
-        Intent login = new Intent(Welcome.this, Login.class);
-        startActivity(login);
+        Intent register = new Intent(Welcome.this, Register.class);
+        startActivity(register);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
     }

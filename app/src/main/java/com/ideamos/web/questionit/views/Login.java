@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,11 +25,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.ideamos.web.questionit.Controllers.FavoriteController;
+import com.ideamos.web.questionit.Controllers.ReactionController;
 import com.ideamos.web.questionit.Controllers.UserController;
 import com.ideamos.web.questionit.Helpers.DataOption;
 import com.ideamos.web.questionit.Helpers.SweetDialog;
 import com.ideamos.web.questionit.Helpers.Validate;
 import com.ideamos.web.questionit.Models.Favorite;
+import com.ideamos.web.questionit.Models.Reaction;
 import com.ideamos.web.questionit.Models.SocialUser;
 import com.ideamos.web.questionit.Models.User;
 import com.ideamos.web.questionit.R;
@@ -49,6 +52,7 @@ public class Login extends AppCompatActivity {
     private Context context;
     private UserController userController;
     private FavoriteController favoriteController;
+    private ReactionController reactionController;
     private SweetDialog dialog;
     private Validate validate;
     private DataOption data;
@@ -74,6 +78,7 @@ public class Login extends AppCompatActivity {
         context = this;
         userController = new UserController(context);
         favoriteController = new FavoriteController(context);
+        reactionController = new ReactionController(context);
         dialog = new SweetDialog(context);
         validate = new Validate(context);
         data = new DataOption();
@@ -97,14 +102,6 @@ public class Login extends AppCompatActivity {
     }
 
 //Funciones de click y operaciones
-
-    @OnClick(R.id.lbl_register_with_us)
-    public void clickRegister(){
-        Intent register = new Intent(Login.this, Register.class);
-        startActivity(register);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        finish();
-    }
 
     @OnClick(R.id.but_login)
     public void clickLogin(){
@@ -147,8 +144,11 @@ public class Login extends AppCompatActivity {
                 if (success) {
                     String token = jsonObject.get("token").getAsString();
                     User user = new Gson().fromJson(jsonObject.get("user"), User.class);
+                    JsonArray array = jsonObject.get("user")
+                            .getAsJsonObject().get("favorites").getAsJsonArray();
                     user.setToken(token);
                     if(userController.create(user)){
+                        saveFavorites(array);
                         dialog.cancelarProgress();
                         next(user.getState());
                     }
@@ -188,9 +188,14 @@ public class Login extends AppCompatActivity {
                     try {
                         String token = jsonObject.get("token").getAsString();
                         User user = new Gson().fromJson(jsonObject.get("user"), User.class);
+                        JsonArray favorites = jsonObject.get("user")
+                                .getAsJsonObject().get("favorites").getAsJsonArray();
+                        JsonArray reactions = jsonObject.get("user")
+                                .getAsJsonObject().get("reactions").getAsJsonArray();
                         user.setToken(token);
                         if(userController.create(user)){
-                            getFavorites(token, user.getUser_id());
+                            saveFavorites(favorites);
+                            saveReactions(reactions);
                             dialog.cancelarProgress();
                             next(user.getState());
                         }
@@ -219,35 +224,6 @@ public class Login extends AppCompatActivity {
         });
     }
 
-    public void getFavorites(String token, int user_id){
-        final String url = getString(R.string.url_con);
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setEndpoint(url)
-                .build();
-        Service api = restAdapter.create(Service.class);
-        api.getFavoritesUser(token, user_id, new Callback<JsonObject>() {
-            @Override
-            public void success(JsonObject jsonObject, Response response) {
-                boolean success = jsonObject.get("success").getAsBoolean();
-                if(success){
-                    JsonArray array = jsonObject.get("favorites").getAsJsonArray();
-                    saveFavorites(array);
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                try {
-                    Log.e("Error", "Se ha producido un error durante el proceso, intentarlo más tarde.");
-                    Log.e("Timeline(getFavorites)", "Error: " + error.getBody().toString());
-                } catch (Exception ex) {
-                    Log.e("Timeline(getFavorites)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
-                }
-            }
-        });
-    }
-
     public boolean saveFavorites(JsonArray array){
         boolean res = true;
         try {
@@ -265,7 +241,44 @@ public class Login extends AppCompatActivity {
         return res;
     }
 
+    public boolean saveReactions(JsonArray array){
+        boolean res = true;
+        try {
+            if(array.size() > 0){
+                for (int i = 0; i < array.size(); i++) {
+                    JsonObject json = array.get(i).getAsJsonObject();
+                    Reaction reactions = new Gson().fromJson(json, Reaction.class);
+                    reactionController.create(reactions);
+                }
+            }
+        } catch (JsonIOException ex) {
+            res = false;
+            Log.e("Timeline(saveReactions)", "Error ex: " + ex.getMessage());
+        }
+        return res;
+    }
+
 //Funciones de la app
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+                onClickBack();
+                return true;
+            default:
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @OnClick(R.id.icon_back)
+    public void onClickBack(){
+        Intent register = new Intent(Login.this, Register.class);
+        startActivity(register);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finish();
+    }
 
     public void next(int state){
         if(state == 1){
