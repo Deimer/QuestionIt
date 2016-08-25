@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -36,6 +35,7 @@ import com.ideamos.web.questionit.Models.Post;
 import com.ideamos.web.questionit.Models.User;
 import com.ideamos.web.questionit.R;
 import com.ideamos.web.questionit.Service.Service;
+import com.melnykov.fab.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 import java.util.List;
 import butterknife.Bind;
@@ -58,7 +58,7 @@ public class Timeline extends AppCompatActivity
     private SweetDialog dialog;
 
     //Elementos del navigation drawer
-    private CircleImageView profile_user;
+    private CircleImageView  profile_user;
     private TextView lbl_fullname_navigation;
     private TextView lbl_email_navigation;
 
@@ -142,10 +142,7 @@ public class Timeline extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_home) {
-            System.out.println("Home");
-            Intent profile = new Intent(Timeline.this, MyProfile.class);
-            startActivity(profile);
-            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            goToHome();
         } else if (id == R.id.action_settings) {
             System.out.println("Settings");
         } else if (id == R.id.action_logout) {
@@ -168,6 +165,7 @@ public class Timeline extends AppCompatActivity
     }
 
     public void setupRecycler(){
+        fab.attachToRecyclerView(recycler);
         recycler.setHasFixedSize(true);
         List<Post> posts = postController.list();
         Recycler adapter = new Recycler(context, posts);
@@ -215,6 +213,13 @@ public class Timeline extends AppCompatActivity
                 .centerCrop()
                 .fit()
                 .into(profile_user);
+        profile_user.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawer_layout.closeDrawer(GravityCompat.START);
+                goToHome();
+            }
+        });
     }
 
 //Funciones de consulta a la api
@@ -369,6 +374,12 @@ public class Timeline extends AppCompatActivity
     }
 
 //Seccion de entrega de datos
+
+    public void goToHome(){
+        Intent profile = new Intent(Timeline.this, MyProfile.class);
+        startActivityForResult(profile, 91);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

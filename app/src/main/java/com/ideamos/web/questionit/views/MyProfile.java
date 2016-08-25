@@ -1,5 +1,6 @@
 package com.ideamos.web.questionit.views;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Color;
@@ -9,6 +10,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.ideamos.web.questionit.Controllers.SocialController;
@@ -108,6 +111,13 @@ public class MyProfile extends AppCompatActivity implements AppBarLayout.OnOffse
             actionBar.setTitle(userController.show().getFullName());
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowTitleEnabled(true);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setResult(Activity.RESULT_CANCELED);
+                    finish();
+                }
+            });
         }
     }
 
@@ -129,8 +139,8 @@ public class MyProfile extends AppCompatActivity implements AppBarLayout.OnOffse
                 .load(imageUrl)
                 .centerCrop()
                 .fit()
-                .placeholder(R.drawable.com_facebook_profile_picture_blank_square)
-                .error(R.drawable.com_facebook_profile_picture_blank_square)
+                .placeholder(R.drawable.user_question_it)
+                .error(R.drawable.user_question_it)
                 .into(user_avatar);
     }
 
@@ -161,5 +171,22 @@ public class MyProfile extends AppCompatActivity implements AppBarLayout.OnOffse
     public void setupFab(){
         System.out.println("Working...");
     }
+
+//region Funciones varias
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+                setResult(Activity.RESULT_CANCELED);
+                finish();
+                return true;
+            default:
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+//endregion
 
 }

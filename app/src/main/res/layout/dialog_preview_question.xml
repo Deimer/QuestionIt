@@ -37,7 +37,7 @@
                     android:layout_height="wrap_content">
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/avatar_preview_post"
-                        android:src="@drawable/com_facebook_profile_picture_blank_square"
+                        android:src="@drawable/user_question_it"
                         android:scaleType="centerCrop"
                         app:border_width="2dp"
                         app:border_color="@color/colorPrimaryLight"

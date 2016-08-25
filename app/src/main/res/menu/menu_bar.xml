@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorPrimary"
+    app:bbn_badgeColor="@color/colorAccent"
+    app:bbn_rippleColor="@color/colorPrimaryLight">
+    <item
+        android:id="@+id/item1"
+        android:color="@color/colorPrimary"
+        android:icon="@mipmap/ic_user_white"
+        android:title="@string/tab_menu_1" />
+    <item
+        android:id="@+id/item2"
+        android:color="@color/colorPrimary"
+        android:icon="@mipmap/ic_likes_light"
+        android:title="@string/tab_menu_2" />
+    <item
+        android:id="@+id/item3"
+        android:color="@color/colorPrimary"
+        android:icon="@drawable/ic_send_button"
+        android:title="@string/tab_menu_3" />
+    <item
+        android:id="@+id/item4"
+        android:color="@color/colorPrimary"
+        android:icon="@mipmap/ic_chat"
+        android:title="@string/tab_menu_4" />
+    <item
+        android:id="@+id/item5"
+        android:color="@color/colorPrimary"
+        android:icon="@mipmap/ic_favorite_white"
+        android:title="@string/tab_menu_5" />
+</menu>

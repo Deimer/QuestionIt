@@ -68,17 +68,15 @@
                     android:textColor="@color/secondary_text"/>
             </LinearLayout>
         </android.support.v7.widget.CardView>
-        <com.github.clans.fab.FloatingActionButton
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center"
             android:layout_marginTop="12dp"
             android:src="@drawable/circle_next_white"
-            app:fab_showShadow="true"
-            app:fab_colorNormal="@color/colorPrimary"
-            app:fab_colorPressed="@color/colorPrimaryDark"
-            app:fab_colorRipple="@color/colorPrimaryLight"/>
+            android:scaleType="center"
+            app:rippleColor="@color/colorPrimaryLight"/>
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

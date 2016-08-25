@@ -2,48 +2,41 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_answer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/icons"
     tools:context="com.ideamos.web.questionit.Fragments.AnswersTab">
-
-    <android.support.v4.widget.NestedScrollView
-
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
+            android:id="@+id/layout_answers"
+            android:animateLayoutChanges="true"
+            android:visibility="gone"
+            android:layout_margin="6dp"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:id="@+id/layout_answers"
-                android:animateLayoutChanges="true"
-                android:visibility="gone"
-                android:layout_margin="6dp"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-            <View
-                android:layout_marginTop="4dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginLeft="4dp"
-                android:background="@color/com_facebook_button_background_color_disabled"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"/>
-            <LinearLayout
-                android:id="@+id/layout_not_found"
-                android:visibility="gone"
-                android:layout_margin="6dp"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler"
-                android:scrollbars="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
-    <include layout="@layout/menu_options_bar" />
-
+            android:layout_height="wrap_content" />
+        <View
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginLeft="4dp"
+            android:background="@color/com_facebook_button_background_color_disabled"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+        <LinearLayout
+            android:id="@+id/layout_not_found"
+            android:visibility="gone"
+            android:layout_margin="6dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
 </FrameLayout>

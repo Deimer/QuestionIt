@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     tools:context=".views.Timeline"
     tools:showIn="@layout/activity_time_line">
 
@@ -22,13 +21,16 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
     </android.support.design.widget.AppBarLayout>
     <include layout="@layout/content_time_line" />
-    <android.support.design.widget.FloatingActionButton
+    <com.melnykov.fab.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:scaleType="center"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@mipmap/ic_plus_add" />
+        android:src="@mipmap/ic_plus_add"
+        app:fab_colorNormal="@color/colorAccent"
+        app:fab_colorPressed="@color/colorAccentLight"
+        app:fab_colorRipple="@color/accentPressed"/>
 
 </android.support.design.widget.CoordinatorLayout>

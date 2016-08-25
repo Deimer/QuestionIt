@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -14,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -34,14 +34,16 @@ import com.ideamos.web.questionit.Models.Answer;
 import com.ideamos.web.questionit.Models.Post;
 import com.ideamos.web.questionit.Models.UserAnswer;
 import com.ideamos.web.questionit.R;
+import com.ideamos.web.questionit.Service.MessageBusAnswer;
 import com.ideamos.web.questionit.Service.Service;
-import com.michaldrabik.tapbarmenulib.TapBarMenu;
+import com.ideamos.web.questionit.Service.StationBus;
+import com.squareup.otto.Subscribe;
 import com.triggertrap.seekarc.SeekArc;
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -57,13 +59,12 @@ public class AnswersTab extends Fragment {
     private UserController userController;
     private PostController postController;
     private SweetDialog dialog;
+    private ToastCustomer toast;
     private List<RadioButton> listRadios;
     private List<CheckBox> listCheck;
     private static Post post;
 
     //Elements
-    @Bind(R.id.tap_bar_menu)TapBarMenu tap_bar_menu;
-    @Bind(R.id.item1)ImageView item_send;
     @Bind(R.id.layout_answers)LinearLayout layout_answers;
     @Bind(R.id.layout_not_found)LinearLayout layout_not_found;
     @Bind(R.id.recycler)RecyclerView recycler;
@@ -88,68 +89,82 @@ public class AnswersTab extends Fragment {
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        StationBus.getBus().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        StationBus.getBus().unregister(this);
+    }
+
+    @Subscribe
+    public void recievedComment(MessageBusAnswer messageBusAnswer){
+        int type_post = messageBusAnswer.getType_post();
+        if(layout_answers.getVisibility() == View.GONE) {
+            toast.toastWarning("Ya respondiste la pregunta.");
+        } else {
+            activeAnswer(type_post);
+        }
+    }
+
+    public void activeAnswer(final int type_post){
+        new SweetAlertDialog(getActivity(), SweetAlertDialog.NORMAL_TYPE)
+                .setTitleText("¿Enviar respuesta?")
+                .setCancelText("No")
+                .setConfirmText("Si")
+                .showCancelButton(true)
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.cancel();
+                    }
+                })
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                        getOption(type_post);
+                    }
+                })
+                .show();
+    }
+
     public void setupContext(){
         context = getActivity().getApplicationContext();
         userController = new UserController(context);
         postController = new PostController(context);
         dialog = new SweetDialog(getActivity());
+        toast = new ToastCustomer(getActivity());
         listRadios = new ArrayList<>();
         listCheck = new ArrayList<>();
         getAnswerOptions();
         getUserAnswers();
     }
 
-    @OnClick(R.id.tap_bar_menu)
-    public void clickMenuBar(){
-        tap_bar_menu.toggle();
-        if(tap_bar_menu.isOpened()){
-            setupTitle(700);
-        }
-    }
-
-    public void setupTitle(int time){
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                YoYo.with(Techniques.Pulse)
-                        .duration(700)
-                        .playOn(item_send);
-            }
-        }, time);
-    }
-
-    @OnClick({ R.id.item1, R.id.item2, R.id.item3, R.id.item4 })
-    public void clickOptionMenu(View view) {
-        tap_bar_menu.close();
-        switch (view.getId()) {
-            case R.id.item1:
-                System.out.println("Click item # 1");
-                getOptions();
-                break;
-            case R.id.item2:
-                System.out.println("Click item # 2");
-                break;
-            case R.id.item3:
-                System.out.println("Click item # 3");
-                break;
-            case R.id.item4:
-                System.out.println("Click item # 4");
-                break;
-        }
-    }
-
-    public void getOptions(){
-        if(listRadios.size() > 0){
-            for (int i = 0; i < listRadios.size(); i++) {
-                if(listRadios.get(i).isChecked()){
-                    int answer_id = Integer.parseInt(listRadios.get(i).getTag().toString());
-                    int user_id = userController.show().getUser_id();
-                    System.out.println(answer_id);
-                    sendVote(answer_id, user_id);
-                    break;
+    public void getOption(int type_post){
+        boolean answered = false;
+        if(type_post == 1){
+            if(listRadios.size() > 0){
+                for (int i = 0; i < listRadios.size(); i++) {
+                    if(listRadios.get(i).isChecked()){
+                        int answer_id = Integer.parseInt(listRadios.get(i).getTag().toString());
+                        int user_id = userController.show().getUser_id();
+                        sendVote(answer_id, user_id);
+                        answered = true;
+                        break;
+                    }
                 }
-            }
-        } else if(listCheck.size() > 0) {
+                if(!answered) {dialog.dialogWarning("", "Antes debes seleccionar una opción de respuesta.");}
+            } else { dialog.dialogWarning("", "No hay opciones disponibles aún."); }
+        }
+    }
+
+    public void getOptions(int type_post){
+        if(listCheck.size() > 0) {
             for (int i = 0; i < listCheck.size(); i++) {
                 if(listCheck.get(i).isChecked()){
                     int answer_id = Integer.parseInt(listCheck.get(i).getTag().toString());
@@ -158,7 +173,7 @@ public class AnswersTab extends Fragment {
                     sendVote(answer_id, user_id);
                 }
             }
-        }
+        } else { dialog.dialogWarning("", "Antes debes dar tu respuesta."); }
     }
 
     private ValueAnimator slideAnimator(int start, int end) {
@@ -210,7 +225,6 @@ public class AnswersTab extends Fragment {
     public void setupRecycler(List<UserAnswer> answers){
         if(answers.size() > 0){
             int post_id = post.getPost_id();
-            int answer_type = post.getAnswer_type();
             int user_id = postController.search(post_id).getUser_id();
             RecyclerAnswerPost adapter = new RecyclerAnswerPost(context, answers, user_id);
             recycler.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
@@ -225,6 +239,10 @@ public class AnswersTab extends Fragment {
         for (int i = 0; i < array.size(); i++) {
             JsonObject json = array.get(i).getAsJsonObject();
             UserAnswer answers = new Gson().fromJson(json, UserAnswer.class);
+            if (answers.getUser_id().equals(userController.show().getUser_id())) {
+                post.setI_answered(true);
+                postController.update(post);
+            }
             list.add(answers);
         }
         setupRecycler(list);
@@ -260,13 +278,14 @@ public class AnswersTab extends Fragment {
                 if(success) {
                     String message = jsonObject.get("message").getAsString();
                     String new_token = jsonObject.get("new_token").getAsString();
+                    dialog.cancelarProgress();
                     if(userController.changeToken(new_token)){
-                        ToastCustomer toast = new ToastCustomer(context);
-                        toast.snackBarBasic(message, tap_bar_menu);
+                        toast.toastBasic(message);
+                        post.setI_answered(true);
+                        postController.update(post);
                         hideOptions();
                         getUserAnswers();
                     }
-                    dialog.cancelarProgress();
                 }
             }
             @Override
@@ -354,7 +373,7 @@ public class AnswersTab extends Fragment {
     public void answersNotFound(String message){
         TextView textView = new TextView(context);
         textView.setText(message);
-        textView.setTextColor(getResources().getColor(R.color.primary_text));
+        textView.setTextColor(ContextCompat.getColor(context, R.color.primary_text));
         layout_not_found.setVisibility(View.VISIBLE);
         layout_not_found.addView(textView);
     }
@@ -384,7 +403,7 @@ public class AnswersTab extends Fragment {
             radio.setText(answer.getDescription());
             radio.setId(answer.getAnswer_id());
             radio.setTag(answer.getAnswer_id());
-            radio.setTextColor(getResources().getColor(R.color.primary_text));
+            radio.setTextColor(ContextCompat.getColor(context, R.color.primary_text));
             group.addView(radio);
             listRadios.add(radio);
         }
@@ -395,11 +414,12 @@ public class AnswersTab extends Fragment {
     public void multipleOptions(List<Answer> answerList){
         for (int i = 0; i < answerList.size(); i++) {
             Answer answer = answerList.get(i);
-            CheckBox checkbox = new CheckBox(context);
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            CheckBox checkbox = (CheckBox)inflater.inflate(R.layout.template_check_box, null);
             checkbox.setText(answer.getDescription());
             checkbox.setId(answer.getAnswer_id());
             checkbox.setTag(answer.getAnswer_id());
-            checkbox.setTextColor(getResources().getColor(R.color.primary_text));
+            checkbox.setTextColor(ContextCompat.getColor(context, R.color.primary_text));
             layout_answers.addView(checkbox);
             listCheck.add(checkbox);
         }

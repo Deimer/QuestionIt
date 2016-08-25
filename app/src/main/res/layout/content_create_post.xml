@@ -75,10 +75,23 @@
                     <TextView
                         android:id="@+id/lbl_accountant"
                         android:layout_marginTop="2dp"
+                        android:layout_marginBottom="2dp"
                         android:layout_gravity="right"
                         android:textColor="@color/divider"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
+                    <EditText
+                        android:id="@+id/txt_hashtags"
+                        android:background="@drawable/background_edittext"
+                        android:textSize="16sp"
+                        android:textColor="@color/primary_text"
+                        android:hint="@string/createpost_hashtags"
+                        android:textColorHint="@color/secondary_text"
+                        android:inputType="textCapSentences|textMultiLine"
+                        android:padding="6dp"
+                        android:minHeight="45dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
                 </LinearLayout>
             </LinearLayout>
             <View
@@ -131,7 +144,7 @@
                 <LinearLayout
                     android:id="@+id/layout_options"
                     android:layout_marginTop="14dp"
-                    android:visibility="visible"
+                    android:visibility="invisible"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">

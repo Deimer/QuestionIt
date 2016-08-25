@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".views.DetailPost">
 
     <android.support.design.widget.AppBarLayout
@@ -22,10 +22,10 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="?attr/actionBarSize">
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/avatar_user"
-                    android:src="@drawable/com_facebook_profile_picture_blank_square"
+                    android:src="@drawable/user_question_it"
                     android:scaleType="centerCrop"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
@@ -78,8 +78,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+    <it.sephiroth.android.library.bottomnavigation.BottomNavigation
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:bbn_entries="@menu/menu_bar"
+        app:bbn_scrollEnabled="true"
+        app:bbn_badgeProvider="@string/bbn_badgeProvider"
+        app:layout_behavior="@string/bbn_phone_view_behavior" />
 
-    <!-- <include layout="@layout/content_post" /> -->
-    <!-- <include layout="@layout/menu_options_bar" /> -->
+    <!-- Bottom Sheet -->
+    <include layout="@layout/bottom_sheet_main" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -2,13 +2,10 @@ package com.ideamos.web.questionit.Controllers;
 
 import android.content.Context;
 import android.util.Log;
-
 import com.ideamos.web.questionit.Database.DatabaseHelper;
 import com.ideamos.web.questionit.Models.Post;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.j256.ormlite.stmt.QueryBuilder;
-
 import java.util.List;
 
 /**

@@ -32,6 +32,14 @@ public class DataOption {
         return scopes;
     }
 
+    public List<String> titleTabsSheet(int total_reactions){
+        ArrayList<String> scopes = new ArrayList<>();
+        scopes.add("Todas " + total_reactions);
+        scopes.add("Me Gusta");
+        scopes.add("No Me Gusta");
+        return scopes;
+    }
+
     public JsonObject convertToJsonGson(JSONObject object){
         JsonParser jsonParser = new JsonParser();
         return (JsonObject)jsonParser.parse(object.toString());

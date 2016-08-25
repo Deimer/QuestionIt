@@ -12,7 +12,7 @@
         android:id="@+id/profile_user"
         app:border_color="@color/colorPrimaryLight"
         app:border_width="3dp"
-        android:src="@drawable/com_facebook_profile_picture_blank_square"
+        android:src="@drawable/user_question_it"
         android:layout_marginLeft="24dp"
         android:layout_marginStart="24dp"
         android:layout_centerVertical="true"

@@ -20,7 +20,7 @@
     <ImageView
         android:id="@+id/img_avatar_user"
         android:contentDescription="@string/app_title"
-        android:src="@drawable/com_facebook_profile_picture_blank_square"
+        android:src="@drawable/user_question_it"
         android:scaleType="centerCrop"
         android:layout_width="290dp"
         android:layout_height="360dp" />

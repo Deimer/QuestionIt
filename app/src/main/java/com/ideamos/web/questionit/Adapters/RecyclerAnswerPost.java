@@ -59,8 +59,8 @@ public class RecyclerAnswerPost extends RecyclerView.Adapter<RecyclerAnswerPost.
         Picasso.with(context)
                 .load(avatar)
                 .centerCrop().fit()
-                .placeholder(R.drawable.com_facebook_profile_picture_blank_square)
-                .error(R.drawable.com_facebook_profile_picture_blank_square)
+                .placeholder(R.drawable.user_question_it)
+                .error(R.drawable.user_question_it)
                 .into(holder.avatar_user_answer);
         holder.lbl_fullname_asnwer.setText(full_name);
         holder.lbl_answer_vote.setText("Respondío: " + answer);

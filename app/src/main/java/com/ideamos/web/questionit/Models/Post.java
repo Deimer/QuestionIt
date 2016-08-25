@@ -34,6 +34,8 @@ public class Post {
     private int category_id;
     @DatabaseField(canBeNull = false)
     private int answer_type;
+    @DatabaseField(canBeNull = false, defaultValue = "false")
+    private Boolean i_answered;
     @DatabaseField(canBeNull = false)
     private boolean active;
     @DatabaseField(canBeNull = true)
@@ -44,7 +46,7 @@ public class Post {
     public Post(int post_id, int user_id, String question,
                 String username, String full_name, String avatar,
                 String created_at, int category_id, int answer_type,
-                boolean active, int votes) {
+                Boolean i_answered, boolean active, int votes) {
         this.post_id = post_id;
         this.user_id = user_id;
         this.question = question;
@@ -54,6 +56,7 @@ public class Post {
         this.created_at = created_at;
         this.category_id = category_id;
         this.answer_type = answer_type;
+        this.i_answered = i_answered;
         this.active = active;
         this.votes = votes;
     }
@@ -88,6 +91,9 @@ public class Post {
     }
     public int getAnswer_type() {
         return answer_type;
+    }
+    public Boolean isI_answered() {
+        return i_answered;
     }
     public boolean isActive() {
         return active;
@@ -128,6 +134,9 @@ public class Post {
     public void setAnswer_type(int answer_type) {
         this.answer_type = answer_type;
     }
+    public void setI_answered(Boolean i_answered) {
+        this.i_answered = i_answered;
+    }
     public void setActive(boolean active) {
         this.active = active;
     }
@@ -135,7 +144,6 @@ public class Post {
         this.votes = votes;
     }
 //endregion
-
 
     @Override
     public String toString() {
@@ -150,9 +158,9 @@ public class Post {
             ", created_at='" + created_at + '\'' +
             ", category_id=" + category_id +
             ", answer_type=" + answer_type +
+            ", i_answered=" + i_answered +
             ", active=" + active +
             ", votes=" + votes +
         '}';
     }
-
 }

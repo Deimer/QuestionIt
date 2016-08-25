@@ -74,14 +74,16 @@ public class Recycler extends RecyclerView.Adapter<Recycler.AdapterView> {
         boolean hasReaction = reactionController.hasReaction(post_id);
         Picasso.with(context).load(avatar)
                 .centerCrop().fit()
-                .placeholder(R.drawable.com_facebook_profile_picture_blank_square)
-                .error(R.drawable.com_facebook_profile_picture_blank_square)
+                .placeholder(R.drawable.user_question_it)
+                .error(R.drawable.user_question_it)
                 .into(holder.avatar_author);
         holder.lbl_author_post.setText(username);
         holder.lbl_post_question.setText(description);
         holder.lbl_answers.setText(votes + "k");
         if (active) {
             Picasso.with(context).load(R.mipmap.ic_favorite).into(holder.icon_favorite);
+        } else {
+            Picasso.with(context).load(R.mipmap.ic_no_favorite).into(holder.icon_favorite);
         }
         if(hasReaction){
             Reaction reaction = reactionController.isReaction(post_id);
@@ -96,6 +98,9 @@ public class Recycler extends RecyclerView.Adapter<Recycler.AdapterView> {
                     Picasso.with(context).load(R.mipmap.ic_dislike_light).into(holder.icon_dislike);
                     break;
             }
+        } else {
+            Picasso.with(context).load(R.mipmap.ic_like).into(holder.icon_like);
+            Picasso.with(context).load(R.mipmap.ic_dislike).into(holder.icon_dislike);
         }
 
     }
@@ -135,10 +140,8 @@ public class Recycler extends RecyclerView.Adapter<Recycler.AdapterView> {
                 createFavorite(post_id, icon_favorite);
             } else if(view.getId() == R.id.icon_like) {
                 int post_id = posts.get(position).getPost_id();
-                System.out.println("click en me gusta");
                 setupReaction(post_id, icon_like, icon_dislike, 1);
             } else if(view.getId() == R.id.icon_dislike) {
-                System.out.println("click en no me gusta");
                 int post_id = posts.get(position).getPost_id();
                 setupReaction(post_id, icon_like, icon_dislike, 2);
             }
@@ -225,10 +228,10 @@ public class Recycler extends RecyclerView.Adapter<Recycler.AdapterView> {
         SmallBang smallBang = SmallBang.attach2Window((Timeline)context);
         if(active){
             Picasso.with(context).load(R.mipmap.ic_favorite).into(icon_favorite);
-            messageFavorite("Pregunta agregada a tu lista de favoritos", icon_favorite);
+            messageFavorite("Pregunta agregada a favoritos", icon_favorite);
         } else {
             Picasso.with(context).load(R.mipmap.ic_no_favorite).into(icon_favorite);
-            messageFavorite("Pregunta removida de tu lista de favoritos", icon_favorite);
+            messageFavorite("Pregunta eliminada de tus favoritos", icon_favorite);
         }
         smallBang.bang(icon_favorite, 50, new SmallBangListener() {
             @Override
@@ -242,7 +245,7 @@ public class Recycler extends RecyclerView.Adapter<Recycler.AdapterView> {
         Snackbar snack = Snackbar.make(icon, message, Snackbar.LENGTH_LONG);
         View view = snack.getView();
         TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
-        tv.setTextColor(Color.parseColor("#E64A19"));
+        tv.setTextColor(Color.WHITE);
         snack.show();
     }
 

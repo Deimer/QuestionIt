@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -38,11 +39,13 @@ import com.ideamos.web.questionit.Helpers.ToastCustomer;
 import com.ideamos.web.questionit.Models.Answer;
 import com.ideamos.web.questionit.Models.AnswerType;
 import com.ideamos.web.questionit.Models.Category;
+import com.ideamos.web.questionit.Objects.HashTags;
 import com.ideamos.web.questionit.R;
 import com.ideamos.web.questionit.Service.Service;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.squareup.picasso.Picasso;
 import com.triggertrap.seekarc.SeekArc;
+import com.volokh.danylo.hashtaghelper.HashTagHelper;
 import com.vstechlab.easyfonts.EasyFonts;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +70,7 @@ public class CreatePost extends AppCompatActivity {
     private SweetDialog dialog;
     private ToastCustomer toast;
     private List<Integer> list_items;
-
+    private HashTagHelper hashtag_helper;
 
     //Elementos de la barra
     @Bind(R.id.toolbar)Toolbar toolbar;
@@ -79,6 +82,8 @@ public class CreatePost extends AppCompatActivity {
     MaterialSpinner spinner_categories;
     @Bind(R.id.txt_question)
     EditText txt_question;
+    @Bind(R.id.txt_hashtags)
+    EditText txt_hashtags;
     @Bind(R.id.lbl_accountant)
     TextView lbl_accountant;
     @Bind(R.id.icon_concept)
@@ -115,7 +120,8 @@ public class CreatePost extends AppCompatActivity {
         optionAnswers();
         setupIcons();
         setupRecycler();
-        setupAccountant();
+        setupAccount();
+        setupHashtagHelper();
     }
 
     public void setupToolbar(){
@@ -174,6 +180,7 @@ public class CreatePost extends AppCompatActivity {
         icon_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setResult(Activity.RESULT_CANCELED);
                 finish();
             }
         });
@@ -190,7 +197,7 @@ public class CreatePost extends AppCompatActivity {
         });
     }
 
-    public void setupAccountant(){
+    public void setupAccount(){
         txt_question.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -207,6 +214,11 @@ public class CreatePost extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {}
         });
+    }
+
+    public void setupHashtagHelper(){
+        hashtag_helper = HashTagHelper.Creator.create(Color.parseColor("#DB4C2A"), null);
+        hashtag_helper.handle(txt_hashtags);
     }
 
 //Funciones principales de la activity
@@ -291,21 +303,41 @@ public class CreatePost extends AppCompatActivity {
         return question;
     }
 
+    public List<HashTags> prepareListHashTags(){
+        txt_hashtags.setText(txt_hashtags.getText().toString().trim());
+        List<String> list_hashtags = hashtag_helper.getAllHashTags();
+        List<HashTags> hashTags = new ArrayList<>();
+        for (int i = 0; i < list_hashtags.size(); i++) {
+            String name = list_hashtags.get(i);
+            System.out.println(name);
+            HashTags hashtag = new HashTags(name, true);
+            hashTags.add(hashtag);
+        }
+        return hashTags;
+    }
+
     @OnClick(R.id.icon_done)
     public void clickDone(){
         List<Answer> list = answersList();
         if(list.size() > 0){
             String question = preparedQuestion();
-            if(question.equalsIgnoreCase("")){
+            if(question.equalsIgnoreCase("¿?")){
                 toast.toastWarning("Primero debe formular una pregunta.");
             } else {
                 int code = spinner_categories.getSelectedIndex();
+                int type = spinner_answer_types.getSelectedIndex();
                 if(code > 0){
-                    inflateDialogAnswer(list, question, code);
+                    if(type > 0) {
+                        inflateDialogAnswer(list, question, code);
+                    } else {
+                        toast.toastWarning("Antes debes seleccionar un tipo de pregunta.");
+                    }
+                } else {
+                    toast.toastWarning("Antes debes seleccionar una categoria para la pregunta.");
                 }
             }
         } else {
-            toast.toastWarning("Debe agregar un texto a la opciones de respuesta.");
+            toast.toastWarning("Antes debes agregar opciones para la respuesta.");
         }
     }
 
@@ -315,11 +347,14 @@ public class CreatePost extends AppCompatActivity {
         int index = spinner_answer_types.getSelectedIndex();
         int answer_type = answerController.show(index).getAnswer_type_id();
         String answers = new Gson().toJson(list);
+        List<HashTags> listTags = prepareListHashTags();
+        String tags = new Gson().toJson(listTags);
         System.out.println(answers);
-        createQuestion(question, user_id, category_id, answer_type, answers);
+        System.out.println(tags);
+        createQuestion(question, user_id, category_id, answer_type, answers, tags);
     }
 
-    public void createQuestion(String question, int user_id, int category_id, int answer_type, String answers){
+    public void createQuestion(String question, int user_id, int category_id, int answer_type, String answers, String tags){
         dialog.dialogProgress("Publicando...");
         final String url = getString(R.string.url_con);
         String token = userController.show().getToken();
@@ -328,7 +363,7 @@ public class CreatePost extends AppCompatActivity {
                 .setEndpoint(url)
                 .build();
         Service api = restAdapter.create(Service.class);
-        api.createPost(token, question, user_id, category_id, answer_type, answers, true, new Callback<JsonObject>() {
+        api.createPost(token, question, user_id, category_id, answer_type, answers, tags, true, new Callback<JsonObject>() {
             @Override
             public void success(JsonObject jsonObject, Response response) {
                 boolean success = jsonObject.get("success").getAsBoolean();
@@ -461,9 +496,23 @@ public class CreatePost extends AppCompatActivity {
         Picasso.with(context)
                 .load(url_avatar)
                 .centerCrop().fit()
-                .placeholder(R.drawable.com_facebook_profile_picture_blank_square)
-                .error(R.drawable.com_facebook_profile_picture_blank_square)
+                .placeholder(R.drawable.user_question_it)
+                .error(R.drawable.user_question_it)
                 .into(avatar);
+    }
+
+    //region Funciones varias
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+                setResult(Activity.RESULT_CANCELED);
+                finish();
+                return true;
+            default:
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 //endregion

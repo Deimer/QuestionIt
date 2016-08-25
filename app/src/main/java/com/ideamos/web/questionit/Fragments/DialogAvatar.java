@@ -68,8 +68,8 @@ public class DialogAvatar extends DialogFragment {
         Picasso.with(getActivity())
                 .load(avatar)
                 .centerCrop().fit()
-                .placeholder(R.drawable.com_facebook_profile_picture_blank_square)
-                .error(R.drawable.com_facebook_profile_picture_blank_square)
+                .placeholder(R.drawable.user_question_it)
+                .error(R.drawable.user_question_it)
                 .into(img_avatar_user);
     }
 

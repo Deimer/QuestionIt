@@ -2,26 +2,27 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_row_answer"
+    android:id="@+id/layout_reaction"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <LinearLayout
         android:orientation="horizontal"
+        android:layout_marginTop="12dp"
         android:layout_marginBottom="4dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/avatar_user_answer"
+            android:id="@+id/avatar_user_reaction"
             android:src="@drawable/user_question_it"
             android:scaleType="centerCrop"
             app:border_width="2dp"
             app:border_color="@color/colorPrimaryLight"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="6dp"
@@ -29,38 +30,23 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_gravity="center"
-            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
-                android:id="@+id/lbl_fullname_asnwer"
-                android:text="@string/action_about"
-                android:textStyle="italic"
-                android:textColor="@color/secondary_text"
-                android:textSize="13sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/lbl_answer_vote"
+                android:id="@+id/lbl_name_reaction"
                 android:text="@string/action_about"
                 android:textStyle="bold"
                 android:textColor="@color/secondary_text"
                 android:textSize="15sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/lbl_date_answer"
-                android:layout_gravity="right"
-                android:text="@string/app_name"
-                android:textColor="@color/secondary_text"
-                android:textSize="11sp"
+            <ImageView
+                android:id="@+id/icon_reaction"
+                android:src="@mipmap/ic_like_light"
+                android:layout_marginLeft="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
-    <View
-        android:background="@color/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
 
 </LinearLayout>

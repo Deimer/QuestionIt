@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="@color/icons"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -12,10 +13,10 @@
         android:layout_height="wrap_content">
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/avatar_user_comment"
-            android:src="@drawable/com_facebook_profile_picture_blank_square"
+            android:src="@drawable/user_question_it"
             android:scaleType="centerCrop"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_gravity="center"
             android:layout_marginRight="8dp"
             app:border_width="2dp"
@@ -42,13 +43,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
-        <View
-            android:layout_below="@+id/layout_comment"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@color/separator"
-            android:layout_width="match_parent"
-            android:layout_height="1dp" />
     </RelativeLayout>
+    <View
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
 
 </LinearLayout>

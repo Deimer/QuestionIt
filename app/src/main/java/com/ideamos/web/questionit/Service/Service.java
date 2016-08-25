@@ -1,7 +1,10 @@
 package com.ideamos.web.questionit.Service;
 
 import com.google.gson.JsonObject;
+import com.ideamos.web.questionit.Models.Comment;
+
 import retrofit.Callback;
+import retrofit.http.Body;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
@@ -95,6 +98,7 @@ public interface Service {
             @Field("category_id")int category_id,
             @Field("answer_type")int answer_type,
             @Field("answers")String anwers,
+            @Field("tags")String tags,
             @Field("active")boolean active,
             Callback<JsonObject> cb
     );
@@ -179,6 +183,31 @@ public interface Service {
             @Field("user_id")int user_id,
             @Field("reaction_id")int reaction_id,
             @Field("active")boolean active,
+            Callback<JsonObject> cb
+    );
+
+    @GET("/api/post/reactions/get/{post_id}")
+    void getReactionsInPost(
+            @Query("token") String token,
+            @Path("post_id") Integer post_id,
+            Callback<JsonObject> cb
+    );
+
+//endregion
+
+//region Comments
+
+    @POST("/api/post/comment/create")
+    void createComment(
+            @Query("token") String token,
+            @Body Comment comment,
+            Callback<JsonObject> cb
+    );
+
+    @GET("/api/post/comments/get/{post_id}")
+    void getComments(
+            @Query("token") String token,
+            @Path("post_id") Integer post_id,
             Callback<JsonObject> cb
     );
 
